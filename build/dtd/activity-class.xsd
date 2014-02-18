@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<xsi:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema">
+
+  <xsi:element name="activity-class-schemas" type="activity-class-schemasType"/>
+  
+  <xsi:complexType name="activity-class-schemasType">
+    <xsi:sequence>
+      <xsi:element name="activity-class-schema" type="activity-class-schemaType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsi:sequence>
+    <xsi:attribute name="namespace" type="xsi:string" use="required"/>
+  </xsi:complexType>
+  
+  <xsi:complexType name="activity-class-schemaType">
+    <xsi:all>
+      <xsi:element name="name" type="xsi:string"/>
+      <xsi:element name="activity-class-parameter-schemas" type="activity-class-parameter-schemasType" minOccurs="0"/> 
+      <xsi:element name="activity-return-variable-schemas" type="activity-return-variable-schemasType" minOccurs="0"/> 
+      <xsi:element name="form" type="formType" minOccurs="0"/>
+      <xsi:element name="helper-class" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="class-name" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="requires-user-interaction" type="requires-user-interactionType"/>
+      <xsi:element name="execution-environment" type="execution-environmentType"/>
+      <xsi:element name="function" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="asynchronous" type="asynchronousType" minOccurs="0"/>
+      <xsi:element name="custom-setup-url" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="is-template" type="xsi:boolean" minOccurs="0"/>
+    </xsi:all>
+    <xsi:attribute name="local-id" type="xsi:string" use="required"/>
+  </xsi:complexType>
+
+  <xsi:complexType name="activity-class-parameter-schemasType">
+    <xsi:sequence>
+      <xsi:element name="activity-class-parameter-schema" type="activity-class-parameter-schemaType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsi:sequence>
+  </xsi:complexType>
+
+  <xsi:complexType name="activity-return-variable-schemasType">
+    <xsi:sequence>
+      <xsi:element name="activity-return-variable-schema" type="activity-return-variable-schemaType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsi:sequence>
+  </xsi:complexType>
+
+  <xsi:complexType name="activity-class-parameter-schemaType">
+    <xsi:all>
+      <xsi:element name="name" type="xsi:string"/>
+      <xsi:element name="type" type="typed-variableType"/>
+      <xsi:element name="required" type="requiredType" minOccurs="0" />
+      <xsi:element name="value" type="activity-class-parameter-schema-valueType" minOccurs="0"/>
+      <xsi:element name="input-to-activity-class" type="xsi:boolean" minOccurs="0"/>
+      <xsi:element name="editable" type="editableType" minOccurs="0"/>
+      <xsi:element name="comment" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="prompt" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="supports-multiples" type="xsi:boolean"/>
+      <xsi:element name="hidden-from-designer" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="enumeration" minOccurs="0"/>
+      <xsi:element name="customDisplayReference" minOccurs="0"/>
+    </xsi:all>
+    <xsi:attribute name="local-id" type="xsi:string" use="required"/>
+  </xsi:complexType>
+
+  <xsi:complexType name="activity-class-parameter-schema-valueType" mixed="true">
+    <xsi:sequence>
+      <xsi:element name="activity-class-parameter-schemas" type="activity-class-parameter-schemasType" minOccurs="0"/>
+    </xsi:sequence>
+  </xsi:complexType>
+
+  <xsi:complexType name="activity-return-variable-schemaType">
+    <xsi:all>
+      <xsi:element name="name" type="xsi:string"/>
+      <xsi:element name="type" type="typed-variableType"/>
+      <xsi:element name="value" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="comment" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="prompt" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="supports-multiples" type="xsi:boolean"/>
+    </xsi:all>
+    <xsi:attribute name="local-id" type="xsi:string" use="required"/>
+  </xsi:complexType>
+
+  <xsi:complexType name="formType">
+    <xsi:all>
+      <xsi:element name="type" type="form-typeType"/>
+      <xsi:element name="dynamic-form" type="dynamic-formType"/>
+      <xsi:element name="internal-form" type="internal-formType" minOccurs="0"/>
+      <xsi:element name="jsp-form" type="jsp-formType" minOccurs="0"/>
+    </xsi:all>
+  </xsi:complexType>
+
+  <xsi:complexType name="jsp-formType">
+    <xsi:sequence>
+      <xsi:element name="path" type="xsi:string" />
+    </xsi:sequence>
+  </xsi:complexType>
+
+  <xsi:complexType name="internal-formType">
+    <xsi:all>
+      <xsi:element name="doc-id" type="xsi:nonNegativeInteger" />
+      <xsi:element name="internal-type" type="internal-form-typeType" />
+      <xsi:element name="bindings" type="internal-form-bindingsType" />
+    </xsi:all>
+  </xsi:complexType>
+  
+  <xsi:complexType name="internal-form-bindingsType">
+    <xsi:sequence>
+      <xsi:element name="binding" type="internal-form-bindingType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsi:sequence>
+  </xsi:complexType>
+
+  <xsi:complexType name="internal-form-bindingType">
+    <xsi:all>
+      <xsi:element name="form-input" type="xsi:string" />
+      <xsi:element name="mapped-to" type="xsi:string" />
+    </xsi:all>
+  </xsi:complexType>
+
+  <xsi:complexType name="dynamic-formType">
+    <xsi:sequence>
+      <xsi:element name="form-elements" type="form-elementsType" />
+    </xsi:sequence>
+  </xsi:complexType>
+  
+  <xsi:complexType name="form-elementsType">
+    <xsi:sequence>
+      <xsi:element name="form-element" type="form-elementType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsi:sequence>
+  </xsi:complexType>
+
+  <xsi:complexType name="form-elementType">
+    <xsi:all>
+      <xsi:element name="label" type="xsi:string" />
+      <xsi:element name="editable" type="xsi:boolean" minOccurs="0" default="1"/>
+      <xsi:element name="hidden" type="xsi:boolean" minOccurs="0" default="0"/>
+      <xsi:element name="multiple" type="xsi:boolean" minOccurs="0" default="0"/>
+      <xsi:element name="type" type="form-element-typeType" />
+      <xsi:element name="options" type="optionsType" minOccurs="0"/>
+      <xsi:element name="mapped-to" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="name" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="value" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="instructions" type="xsi:string" minOccurs="0"/>
+      <xsi:element name="required" type="xsi:boolean" minOccurs="0"/>
+    </xsi:all>
+  </xsi:complexType>
+
+  <xsi:complexType name="optionsType">
+    <xsi:sequence>
+      <xsi:element name="option" type="optionType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsi:sequence>
+  </xsi:complexType>
+
+  <xsi:complexType name="optionType">
+    <xsi:attribute name="id" type="xsi:string" use="required"/>
+    <xsi:attribute name="value" type="xsi:string" use="required"/>
+    <xsi:attribute name="default" type="xsi:boolean" use="required"/>
+  </xsi:complexType>
+
+  <!-- <xsi:group name="name-valueGroup">
+    <xsi:all>
+      <xsi:element name="name" type="xsi:string" />
+      <xsi:element name="value" type="xsi:string" />
+    </xsi:all>
+  </xsi:group> -->
+
+  <xsi:simpleType name="internal-form-typeType">
+    <xsi:restriction base="xsi:string">
+      <xsi:enumeration value="pdf"/>
+      <xsi:enumeration value="html"/>
+    </xsi:restriction>
+  </xsi:simpleType>
+  
+  <xsi:simpleType name="form-element-typeType">
+    <xsi:restriction base="xsi:integer">
+      <xsi:minInclusive value="0"/>
+      <xsi:maxInclusive value="27"/>
+    </xsi:restriction>
+  </xsi:simpleType>
+
+  <xsi:simpleType name="form-typeType">
+    <xsi:restriction base="xsi:integer">
+      <xsi:minInclusive value="0"/>
+      <xsi:maxInclusive value="2"/>
+    </xsi:restriction>
+  </xsi:simpleType>
+
+  <xsi:simpleType name="requires-user-interactionType">
+    <xsi:restriction base="xsi:integer">
+      <xsi:minInclusive value="0"/>
+      <xsi:maxInclusive value="2"/>
+    </xsi:restriction>
+  </xsi:simpleType>
+
+  <xsi:simpleType name="execution-environmentType">
+    <xsi:restriction base="xsi:integer">
+      <xsi:minInclusive value="0"/>
+      <xsi:maxInclusive value="1"/>
+    </xsi:restriction>
+  </xsi:simpleType>
+
+  <xsi:simpleType name="typed-variableType">
+    <xsi:restriction base="xsi:integer">
+      <xsi:minInclusive value="0"/>
+      <xsi:maxInclusive value="32"/>
+    </xsi:restriction>
+  </xsi:simpleType>
+
+  <xsi:simpleType name="requiredType">
+    <xsi:restriction base="xsi:integer">
+      <xsi:minInclusive value="0"/>
+      <xsi:maxInclusive value="2"/>
+    </xsi:restriction>
+  </xsi:simpleType>
+
+  <xsi:simpleType name="editableType">
+    <xsi:restriction base="xsi:integer">
+      <xsi:minInclusive value="0"/>
+      <xsi:maxInclusive value="2"/>
+    </xsi:restriction>
+  </xsi:simpleType>
+
+  <xsi:simpleType name="asynchronousType">
+    <xsi:restriction base="xsi:integer">
+      <xsi:minInclusive value="0"/>
+      <xsi:maxInclusive value="1"/>
+    </xsi:restriction>
+  </xsi:simpleType>
+
+</xsi:schema> 

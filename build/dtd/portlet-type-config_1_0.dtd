@@ -1,0 +1,7 @@
+<!ELEMENT portlet-types (portlet-type*)>
+<!ELEMENT portlet-type (name,definition,description,state,editable)>
+<!ELEMENT name           (#PCDATA)>
+<!ELEMENT definition     (#PCDATA)>
+<!ELEMENT description    (#PCDATA)>
+<!ELEMENT state    (#PCDATA)>
+<!ELEMENT editable    (#PCDATA)>

@@ -1,0 +1,27 @@
+<!--ELEMENTS-->
+<!ELEMENT event-config (handler*,demultiplexer*,multicaster*,unicaster*)>
+<!ELEMENT handler (param*)>
+<!ELEMENT demultiplexer (param*,clause+)>
+<!ELEMENT multicaster (param*,listener+)>
+<!ELEMENT unicaster (param*,listener?)>
+<!ELEMENT clause (listener+)>
+<!ELEMENT listener (#PCDATA)>
+<!ELEMENT param EMPTY>
+
+<!--ATTRIBUTES-->
+<!ATTLIST handler name CDATA #REQUIRED>
+<!ATTLIST handler type CDATA #REQUIRED>
+<!ATTLIST handler root (true|false) #IMPLIED>
+<!ATTLIST demultiplexer name CDATA #REQUIRED>
+<!ATTLIST demultiplexer type CDATA #REQUIRED>
+<!ATTLIST demultiplexer root (true|false) #IMPLIED>
+<!ATTLIST multicaster name CDATA #REQUIRED>
+<!ATTLIST multicaster type CDATA #REQUIRED>
+<!ATTLIST multicaster root (true|false) #IMPLIED>
+<!ATTLIST unicaster name CDATA #REQUIRED>
+<!ATTLIST unicaster type CDATA #REQUIRED>
+<!ATTLIST unicaster root (true|false) #IMPLIED>
+<!ATTLIST clause value CDATA #REQUIRED>
+<!ATTLIST param name CDATA #REQUIRED>
+<!ATTLIST param value CDATA #REQUIRED>
+

@@ -1,0 +1,485 @@
+<?xml version="1.0"?>
+<project name="appian pso standard build" default="start">
+  <!-- basic.xml includes classpath and task definitions ******************* -->
+  <import file="basic.xml"/>
+  <!--<import file="utils.xml"/> -->
+
+  <!-- if you try to create a target outside of the menu, add this target as    
+       a dependecy: i.e. depends="out-of-menu"                               -->
+
+  <!-- cleans the appserver cache directory ******************************** -->
+  <target name="clean-cache" depends="init" description="cleans runtime for new build">
+    <echo message="cleaning runtime at ${appserver.cache}" />
+    <delete includeEmptyDirs="true" failonerror="false">
+      <fileset dir="${appserver.cache}">
+        <include name="**/*" />
+      </fileset>
+    </delete>
+    <echo message="done cleaning runtime" />
+  </target>
+
+  <!-- cleans the appserver runtime deploy directory ********************* -->
+  <target name="clean-app" depends="init" description="cleans deployed jee-app">
+    <echo message="cleaning deployed JEE app files from ${runtime.ear}" />
+    <delete file="${runtime.ear}" />
+    <delete includeEmptyDirs="true" failonerror="false">
+      <fileset dir="${runtime.ear}">
+        <include name="**/*" />
+      </fileset>
+    </delete>
+    <echo message="done cleaning JEE apps" />
+  </target>
+
+  <!-- prepares the runtime directories to deploy the web application **** -->
+  <target name="prepare" depends="init" description="creates required runtime folders">
+    <echo message="creating folders at ${runtime.ear}" />
+    <mkdir dir="${runtime.ear}" />
+    <mkdir dir="${runtime.jeeapp}" />
+    <mkdir dir="${runtime.jeeapp.conf}" />
+    <mkdir dir="${runtime.webapp}" />
+    <mkdir dir="${runtime.webinf}" />
+    <mkdir dir="${runtime.classes}" />
+    <mkdir dir="${runtime.lib}" />
+    <echo message="done creating folders" />
+  </target>
+  
+  <!-- configures the clean appian app installation to the runtime ******* -->
+  <target name="config-appian" description="config appian for runtime setup" depends="init" if="isJBoss">
+    <echo message="set AE_CONF=%AE_HOME%\runtime_ear\suite.ear\conf"/>
+    <replaceregexp match="set AE_CONF=(.*)" replace="set AE_CONF=%AE_HOME%\\\\runtime_ear\\\\suite.ear\\\\conf" byline="true">
+      <fileset dir="${appian.server.scripts}" includes="exports.bat"/>
+    </replaceregexp>
+    <echo message="export AE_CONF=$AE_HOME/runtime_ear/suite.ear/conf"/>
+    <replaceregexp match="export AE_CONF=(.*)" replace="export AE_CONF=$AE_HOME/runtime_ear/suite.ear/conf" byline="true">
+      <fileset dir="${appian.server.scripts}" includes="exports.sh"/>
+    </replaceregexp>
+    <echo message="replacing ${appserver.jboss.bin}/${appserver.jboss.bin.run.conf.bat} location with runtime_ear value"/>
+	<replaceregexp match=":/(.*)/ear" replace=":/\1/runtime_ear" byline="true">
+      <fileset dir="${appserver.jboss.bin}" includes="${appserver.jboss.bin.run.conf.bat}"/>
+      <fileset dir="${appserver.jboss.bin}" includes="${appserver.jboss.bin.run.conf}"/>
+    </replaceregexp>
+    <echo message="done configuring appian" />
+  </target>
+  
+  <!-- copies the clean appian app installation to the runtime ******* -->
+  <target name="copy-appian" description="copies appian files to runtime" depends="prepare">
+    <echo message="copying appian enterprise from ${appian.ear} to ${runtime.ear}" />
+    <copy todir="${runtime.ear}" overwrite="${overwrite}" filtering="false" preservelastmodified="true">
+      <fileset dir="${appian.ear}"/>
+    </copy>
+    <echo message="done copying appian enterprise to runtime" />
+  </target>
+
+  <target name="validate-custom-properties" depends="prepare" description="validate that all enabled properties have a valid value in custom.properties">
+	<!-- make a filtered copy of custom.prperties -->
+	<copy tofile="${project.jeeapp.conf}/custom.properties.filtered" overwrite="true" filtering="true" file="${project.jeeapp.conf}/custom.properties" />
+    <!-- search custom.properties.filtered for invalid properties and add INVALID PROPERTY HERE keyword -->  
+	<replaceregexp file="${project.jeeapp.conf}/custom.properties.filtered" 
+		match="^([a-zA-Z0-9\._]+)=(@.+@)"
+		replace="*** INVALID PROPERTY HERE *** \1=\2"
+		byline="true"
+		flags="g"
+	/> 
+	<!-- load all the invalid properties in a property -->
+	<loadfile property="properties.invalid" srcfile="${project.jeeapp.conf}/custom.properties.filtered">        
+      <filterchain>         
+        <tokenfilter>
+			<linetokenizer />
+			<containsregex pattern="INVALID PROPERTY HERE" />
+		</tokenfilter>     
+      </filterchain>     
+    </loadfile>
+	<echo message="${properties.invalid}"/> 
+	<fail message="custom.properties contains invalid properties!!! (see above). The deployment will not continue until these properties are resolved.">
+     <condition>
+       <isset property="properties.invalid"/>
+     </condition>
+	</fail>
+	<delete file="${project.jeeapp.conf}/custom.properties.filtered" />
+	<echo message="custom.properties is valid!"/> 
+  </target>
+
+  	<target name="rename-env-conf-file" depends="nonj2ee-classpaths">
+		<for param="xmlfile">
+			<path>
+				<fileset dir="${project.jeeapp.conf}" includes="*.xml.${environment}"/>
+			</path>
+			
+			<sequential>
+				<propertyregex override="yes"
+				property="newXMLfile"  input="@{xmlfile}"
+					regexp="(.*)(\.xml\.${environment})" replace="\1.xml"/>
+				<echo message="Copying @{xmlfile} to ${newXMLfile}..."/>
+				<copy file="@{xmlfile}" tofile="${newXMLfile}" overwrite="true"/>
+			</sequential>
+		</for>
+	</target>
+  
+  <!-- copies your project web app customizations to the runtime ********* -->
+  <target name="copy-project" depends="prepare, validate-custom-properties, rename-env-conf-file" description="copies project files to runtime">
+    <echo message="copying project files from ${project.ear} to ${runtime.ear} ### Filter On ###" />
+    <!-- specific files where filtering will be applied every time a build is done  -->
+    <copy todir="${runtime.ear}" overwrite="${overwrite}" filtering="true" preservelastmodified="true">
+      <fileset dir="${project.ear}" excludes="**/*.xml.*,**/*.properties.*">
+        <exclude name="suite.ear/src/" />
+        <exclude name="suite.ear/resources/" />
+        <exclude name="**/*.jar" />
+        <exclude name="**/*.gif" />
+        <exclude name="**/*.jpg" />
+        <exclude name="**/*.png" />
+        <exclude name="**/*.pdf" />
+        <exclude name="**/*.doc" />
+        <exclude name="**/*.bak" />
+      </fileset>
+    </copy>
+
+    <echo message="app server used is ${appserver.name}"/>
+	<if>
+	<equals arg1="${appserver.name}" arg2="weblogic" />
+	  <then>
+	  <!-- <echo message="copying custom.properties from ${project.ear} to ${appian.ear} ### Filter On ###" /> -->
+      <!-- specific file that must be copied into the appian ear folder where filtering will be applied every time a build is done  -->
+      <!-- <copy file="${project.ear}/suite.ear/conf/custom.properties" todir="${appian.ear}/suite.ear/conf" overwrite="true" filtering="true" preservelastmodified="true" /> -->
+    
+        <copy todir="${runtime.jeeapp}/APP-INF/classes" overwrite="true" filtering="true" preservelastmodified="true">
+          <fileset dir="${project.jeeapp}">
+            <include name="conf/" />
+            <include name="resources/" />
+            <include name="text/" />
+          </fileset>
+        </copy>
+	  </then>
+	</if>
+
+<!-- filter off: protect binary files from corruption -->
+    <echo message="copying project files from ${project.ear} to ${runtime.ear} ### Filter Off ###" />
+    <copy todir="${runtime.ear}" overwrite="${overwrite}" filtering="false" preservelastmodified="true">
+      <fileset dir="${project.ear}" includes="**/*.jar,**/*.gif,**/*.jpg,**/*.png,**/*.ico"/>
+    </copy>
+    <antcall target="update-properties"/>
+    <echo message="done copying project files to runtime" />
+  </target>
+
+  <!-- clean static files in web server static folder ********* -->
+  <target name="clean-static" depends="prepare" description="clean static files in web server static folder">
+    <echo message="cleaning runtime at ${appian.static.webapp}" />
+    <delete includeEmptyDirs="true" failonerror="false">
+      <fileset dir="${appian.static.webapp}">
+        <include name="**/*.*" />
+        <include name="**/*" />
+      </fileset>
+    </delete>
+    <echo message="done cleaning runtime" />
+  </target>
+
+  <!-- copies source-static to web server static folder ******* -->
+  <target name="copy-static" description="copies static files to web server static folder">
+    <echo message="copying appian enterprise static files from ${source-static} to ${appian.static.webapp}" />
+    <copy todir="${appian.static.webapp}" overwrite="${overwrite}" filtering="false">
+      <fileset dir="${source-static}">
+        <include name="**/*.png"/>
+        <include name="**/*.jpg"/>
+        <include name="**/*.gif"/>
+        <include name="**/*.css*"/>
+        <include name="**/*.js"/>
+        <include name="**/*.bmp"/>
+        <include name="**/*.swf"/>
+        <include name="**/*.html"/>
+        <include name="**/*.htm"/>
+        <include name="**/*.flv"/>
+        <include name="**/*.exe"/>
+        <include name="**/*.msi"/>
+        <include name="**/*.zip"/>
+        <include name="**/*.as"/>
+        <include name="**/*.fla"/>
+      </fileset>
+    </copy>
+    <echo message="done copying appian static files to web server static folder" />
+  </target>
+
+  <!-- copies appian enterprise static files to web server static folder ********* -->
+  <target name="copy-appian-static" depends="prepare" description="copies appian static files to web server static folder">
+    <antcall target="copy-static">
+      <param name="source-static" value="${appian.webapp}" />
+    </antcall>
+  </target>
+
+  <!-- copies project static files to web server static folder ********* -->
+  <target name="copy-project-static" depends="prepare" description="copies project static files to web server static folder">
+    <antcall target="copy-static">
+      <param name="source-static" value="${project.webapp}" />
+    </antcall>
+  </target>
+
+  <!-- creates/updates a property file w/info about the deployment ********* -->
+  <target name="update-properties" description="copies project files to runtime">
+    <if>
+      <equals arg1="${overwrite}" arg2="true" />
+      <then>
+        <propertyfile file="${environment}.build.properties">
+          <entry key="project.ap.primary.version" value="1" type="int" operation="+" />
+          <entry key="project.ap.secondary.version" value="1001"/>
+        </propertyfile>
+      </then>
+      <else>
+          <propertyfile file="${environment}.build.properties">
+            <entry key="project.ap.secondary.version" value="1" type="int" operation="+" pattern="0000"/>
+          </propertyfile>
+      </else>
+    </if>
+    <loadproperties srcFile="${environment}.build.properties"/>
+    <tstamp>
+      <format property="build.time" pattern="dd.MM.yyyy HH:mm:ss"/>
+    </tstamp>
+    <propertyfile file="${runtime.classes}/${project.name}.properties" comment="If build.number is 0001, the last build was fully deployed">
+      <entry key="project.version" value="${project.version.major}.${project.version.minor}"/>
+      <entry key="project.name" value="${project.name}"/>
+      <entry key="build.time" value="${build.time}" type="date"/>
+      <entry key="build.number" value="${project.ap.primary.version}.${project.ap.secondary.version}"/>
+    </propertyfile>
+  </target>
+
+  <!-- compiles your web app customizations ******************************** -->
+  <target name="compile" depends="prepare" description="compiles java files to web application runtime">
+    <!-- compile the Java classes into a temp directory -->
+	<echo message="compiling java files from ${project.src} to ${project.temp.classes}" />
+	<!-- create the temp directory if it does not exist, else does nothing -->
+	<mkdir dir="${project.temp.classes}"/>
+	<!-- start by cleaning temp directory -->
+	<delete includeemptydirs="true">
+		<fileset dir="${project.temp.classes}" includes="**/*"/>
+	</delete>
+    <echo message="classpath: ${j2ee.classpath};${appian.classpath};${project.classpath}" />
+    <javac srcdir="${project.src}" destdir="${project.temp.classes}" optimize="true" debug="true" includeantruntime="false" >
+      <classpath refid="j2ee.classpath" />
+      <classpath refid="appian.classpath" />
+      <classpath refid="project.classpath" />
+    </javac>
+	<echo message="done compiling java classes to temp folder - these files will be JAR and deploy" />
+    <echo message="copying resource files from ${project.src} and ${project.classes} to ${runtime.classes}" />
+    <copy todir="${runtime.classes}" overwrite="${overwrite}" filtering="true" preservelastmodified="false">
+      <fileset dir="${project.src}" includes="**/*.xml,**/*.properties" />
+      <fileset dir="${project.classes}" includes="resources/,text/" />
+    </copy>
+    <copy todir="${runtime.classes}" overwrite="${overwrite}" filtering="false" preservelastmodified="false">
+      <fileset dir="${project.src}" excludes="**/*.java,**/*.properties,**/*.xml" />
+      <fileset dir="${project.classes}" includes="com/,org/,net/"/>
+    </copy>
+    <echo message="done compiling the application" />
+  </target>
+
+  <!-- copy any files needed back to the application server - jboss ******** -->
+  <target name="copy-jboss" if="isJBoss">
+    <echo message="copying server files from ${project.jboss} to ${appserver.home}"/>
+    <copy todir="${appserver.home}" filtering="true" overwrite="${overwrite}">
+      <fileset dir="${project.jboss}">
+        <exclude name="**/*.jar" />
+        <exclude name="**/*.exe" />
+      </fileset>
+    </copy>
+    <!-- copy binary files without filtering -->
+    <copy todir="${appserver.home}" overwrite="${overwrite}" filtering="false">
+      <fileset dir="${project.jboss}" includes="**/*.jar"/>
+      <fileset dir="${project.jboss}" includes="**/*.exe"/>
+    </copy>
+  </target>
+
+  <!-- copy any files needed back to the web server - apache ******** -->
+  <target name="copy-apache" if="isApache">
+    <echo message="copying configuration files from ${build.webserver}/${webserver.name} to ${webserver.home}"/>
+    <copy todir="${webserver.home}" overwrite="${overwrite}" filtering="true">
+      <fileset dir="${build.webserver}/${webserver.name}">
+        <exclude name="**/.*"/>
+        <exclude name="**/*.so"/>
+      </fileset>
+    </copy>
+    <!-- copy module without filtering -->
+    <copy todir="${webserver.home}" overwrite="${overwrite}" filtering="false">
+      <fileset dir="${build.webserver}/${webserver.name}" includes="**/*.so"/>
+    </copy>
+    <echo message="done copying webserver configuration files" />
+  </target>
+
+  <!-- deployment options ************************************************** -->
+  <target name="jar" depends="compile" description="packages project classfiles">
+    <echo message="creating project jarfile" />
+    <jar destfile="${runtime.lib}/appian${ae.version}-${project.name}.jar" basedir="${project.temp.classes}" includes="**/*.class"/>
+    <echo message="done creating project jarfile" />
+  </target>
+
+  <target name="copy-admin" description="config/script admin files back to the appian folder">
+    <echo message="copying appian enterprise admin from ${project.admin} to ${appian.admin}" />
+    <copy todir="${appian.admin}" overwrite="${overwrite}" filtering="true">
+      <fileset dir="${project.admin}">
+		<exclude name="**/*.jar"/>
+	  </fileset>
+    </copy>
+	<!-- copy the plugins archives -->
+	<echo message="copying plugins to ${appian.admin}/plugins" />
+	<copy todir="${appian.admin}/plugins" overwrite="${overwrite}" filtering="false">
+      <fileset dir="${project.admin}/plugins"/>
+    </copy>
+
+    <echo message="done copying appian enterprise admin to ${appian.admin}" />
+  </target>
+
+  <target name="copy-server" description="copy server files to the appian folder">
+    <echo message="copying appian enterprise server from ${project.server} to ${appian.server}" />
+    <copy todir="${appian.server}" overwrite="${overwrite}" filtering="true">
+      <fileset dir="${project.server}"/>
+    </copy>
+    <echo message="done copying appian enterprise server to ${appian.server}" />
+  </target>
+
+  <!-- generate static JS and CSS files ************************************ -->
+  <target name="generate-static-unix" if="isUnix" description="generates static JS and CSS files in unix">
+    <echo message="generating static files here: ${target-webapp}" />
+    <exec executable="${appian.admin.scripts}/tools/generate-static.sh" failonerror="true" dir="${appian.admin.scripts}/tools/">
+      <arg value="${target-webapp}"/>
+    </exec>
+  </target>
+
+  <target name="generate-static-windows" if="isWindows" description="generates static JS and CSS files in windows">
+    <echo message="generating static files here: ${target-webapp}" />
+    <!-- in most cases, .bat files cannot be executed directly -->
+    <!--<exec executable="${appian.admin.scripts}/tools/generate-static.bat" failonerror="true" dir="${appian.admin.scripts}/tools/">
+      <arg value="${target-webapp}"/>
+    </exec>-->
+    <exec executable="cmd" failonerror="true" dir="${appian.admin.scripts}/tools/">
+      <arg value="/c"/>
+      <arg value="generate-static.bat"/>
+      <arg value="${target-webapp}"/>
+    </exec>
+  </target>
+
+  <target name="generate-static-runtime" if="isProduction" description="generates static JS and CSS files in runtime">
+    <antcall target="generate-static-unix">
+      <param name="target-webapp" value="${runtime.webapp}" />
+    </antcall>
+    <antcall target="generate-static-windows">
+      <param name="target-webapp" value="${runtime.webapp}" />
+    </antcall>
+  </target>
+
+  <target name="generate-static-web" if="isProduction" description="generates static JS and CSS files in web server static folder">
+    <antcall target="generate-static-unix">
+      <param name="target-webapp" value="${appian.static.webapp}" />
+    </antcall>
+    <antcall target="generate-static-windows">
+      <param name="target-webapp" value="${appian.static.webapp}" />
+    </antcall>
+  </target>
+
+  <target name="build-plugins" if="buildPlugins" description="compiles and creates the jars for the plugin projects">
+	<!-- deleting all jars from the installed appian location -->
+	<echo message="cleaning plugins directory"/>
+	<delete includeEmptyDirs="true" failonerror="false">
+		<fileset dir="${appian.admin}/plugins">
+			<include name="*.jar" />
+		</fileset>
+	</delete>
+	<echo message="cleaned plugins directory"/>
+	<for param="plugin.dir">
+		<dirset dir="../plugin_projects" includes="*">
+			<depth max="0"/>
+		</dirset>
+		<sequential>
+			<echo>***** Building and Jaring : @{plugin.dir} *****</echo>
+			<mkdir dir="@{plugin.dir}/bin"/>
+			<javac srcdir="@{plugin.dir}/src" destdir="@{plugin.dir}/bin" includeantruntime="false">
+				<classpath>
+					<fileset dir="@{plugin.dir}/lib-compile" includes="*.jar"/>
+				</classpath>
+			</javac>
+			<mkdir dir="@{plugin.dir}/bin/com"/>
+			<copy todir="@{plugin.dir}/bin">
+				<fileset dir="@{plugin.dir}/src/main/resources" excludes="**/*.java"/>
+			</copy>
+			<!-- compiling Appian standard plugin archives directly to installed appian location -->
+			<ant antfile="@{plugin.dir}/build.xml" target="build_with_src">
+				<property name="target_dir" value="${appian.admin}/plugins"/>
+				<property name="basedir" value="@{plugin.dir}"/>
+			</ant>
+		</sequential>
+	</for>
+	<!-- copy the non-Appian standard plugin archives to installed appian location -->
+
+  </target>
+
+<target name="copy-plugins" description="copies plugins">
+	<echo message="copying plugins to ${appian.admin}/plugins" />
+	<copy todir="${appian.admin}/plugins" overwrite="true" filtering="false">
+      <fileset dir="${project.admin}/plugins"/>
+    </copy>
+</target>
+
+    <target name="build-engines" depends="init, rename-env-conf-file">
+		<copy file="${project.jeeapp.conf}/custom.properties" overwrite="${overwrite}" filtering="true"
+			todir="${appian.jeeapp.conf}" preservelastmodified="true"/>
+		<copy file="${project.jeeapp.conf}/appian-topology.xml" overwrite="${overwrite}" filtering="true"
+			todir="${appian.jeeapp.conf}" preservelastmodified="true"/>
+		<copy file="${project.server}/_conf/gateway-config-custom.xml" overwrite="${overwrite}" filtering="true"
+			todir="${appian.server.conf}" preservelastmodified="true"/>
+		<if>
+			<equals arg1="${isWindows}" arg2="true"/>
+			<then>
+				<copy file="${project.server}/_conf/partitions-custom.xml" overwrite="${overwrite}" filtering="true"
+					todir="${appian.server.conf}" preservelastmodified="true"/>
+				<copy file="${project.server}/_conf/forums-config-custom.xml" overwrite="${overwrite}" filtering="true"
+					todir="${appian.server.conf}" preservelastmodified="true"/>
+			</then>
+		</if>		
+	</target>
+	
+	<target name="install-jboss" depends="init">
+		<!--check if JBoss install already exists-->
+		<if>
+			<equals arg1="${jbossExists}" arg2="true"/>
+			<then>
+				<fail message="ERROR: A JBoss installation already exists at this location: ${appserver.home}
+					To re-install, please delete the folder and re-execute."/>
+			</then>
+		</if>		
+		<echo message="Installing JBoss"/>
+		<!--unzip the JBoss installer-->
+		<unzip src="${jboss.installer.source.dir}/${jboss.installer.source.file}"
+			dest="${appserver.jboss.install}"
+			overwrite="true">
+			<!--regexpmapper from="^([^/]+)/(.*)$$" to="\2"/-->
+			<patternset>
+				<exclude name="**/module.xml.example"/>
+			</patternset>
+		</unzip>
+		<!--
+			Add management user
+		-->
+		<exec dir="${appserver.jboss.bin}" executable="add-user.bat" resolveexecutable="true" osfamily="windows">
+	        <arg line="-u ${jboss.management.user.username} -p ${jboss.management.user.password} -s"/>
+        </exec>
+		
+		<!--
+			Uncomment this line if the unzipped folder does not have execution privileges on the script files
+			
+		<chmod dir="${appserver.jboss.bin}" perm="700" includes="**/*.sh" os="Linux,Solaris,SunOS"/>
+		
+		-->
+		
+		<exec dir="${appserver.jboss.bin}" executable="add-user.sh" resolveexecutable="true" os="Linux,Solaris,SunOS">
+	        <arg line="-u ${jboss.management.user.username} -p ${jboss.management.user.password} -s"/>
+        </exec>
+	</target>
+  
+ <!-- high-level targets *************************************************** -->
+  <target name="start">
+    <ant antfile="menu.xml"/>
+  </target>
+
+  <target name="full" depends="init,clean,prepare,config-appian,copy-appian,copy-project,jar,copy-admin,copy-server,plugins,generate-static-runtime,copy-jboss,copy-apache" />
+  <target name="update" depends="prepare,copy-project,jar,copy-admin,copy-server,generate-static-runtime,copy-jboss,copy-apache"/>
+  <target name="engines" depends="build-engines"/>
+  <target name="installJboss" depends="install-jboss,full"/>
+  <target name="app-server-static-full" depends="prepare,clean-static,copy-appian-static,copy-project-static,generate-static-web,copy-apache"/>
+  <target name="app-server-static" depends="prepare,copy-appian-static,copy-project-static,generate-static-web,copy-apache"/>
+  <target name="plugins" depends="build-plugins,copy-plugins" />
+  <target name="clean" depends="init,clean-cache,clean-app" description="cleans runtime for new build"/>
+</project>

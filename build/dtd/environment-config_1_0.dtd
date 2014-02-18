@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Environment DTD.
+
+<!DOCTYPE metadata PUBLIC 
+  "-//Appian Corporation//DTD Environment Configuration 1.0//EN" 
+  "environment-config_1_0.dtd">
+	
+-->
+
+<!ELEMENT environment ( preIncludes, postIncludes, onSystemLoadScript, objectSets ) >
+
+<!ELEMENT include EMPTY >
+<!ATTLIST include owner NMTOKEN #FIXED "system" >
+<!ATTLIST include src CDATA #REQUIRED >
+<!ATTLIST include type NMTOKEN #FIXED "script" >
+
+<!ELEMENT objectSets EMPTY >
+
+<!ELEMENT onSystemLoadScript EMPTY >
+
+<!ELEMENT postIncludes ( include+ ) >
+
+<!ELEMENT preIncludes ( include ) >
+
+

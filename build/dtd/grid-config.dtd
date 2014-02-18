@@ -1,0 +1,34 @@
+<!--ELEMENTS-->
+<!ELEMENT grid-config (grid-data*,grid-type*)>
+<!ELEMENT grid-data (config-param*)>
+<!ELEMENT config-param EMPTY>
+<!ELEMENT grid-type (javascript?,class-sort-order?,column*)>
+<!ELEMENT javascript (script*)>
+<!ELEMENT script (#PCDATA)>
+<!ELEMENT class-sort-order (class*)>
+<!ELEMENT class (#PCDATA)>
+<!ELEMENT column (header?,javascript?,display*)>
+<!ELEMENT header (token*)>
+<!ELEMENT display (token*)>
+<!ELEMENT token EMPTY>
+
+
+<!--ATTRIBUTES-->
+<!ATTLIST grid-data name CDATA #REQUIRED>
+<!ATTLIST grid-data type CDATA #REQUIRED>
+<!ATTLIST config-param name CDATA #REQUIRED>
+<!ATTLIST config-param value CDATA #REQUIRED>
+<!ATTLIST grid-type name CDATA #REQUIRED>
+<!ATTLIST grid-type type CDATA #IMPLIED>
+<!ATTLIST column name CDATA #REQUIRED>
+<!ATTLIST column icon CDATA #IMPLIED>
+<!ATTLIST column sort CDATA #IMPLIED>
+<!ATTLIST column width CDATA #IMPLIED>
+<!ATTLIST column text-align CDATA #IMPLIED>
+<!ATTLIST display type CDATA #REQUIRED> 
+<!ATTLIST display sortAttribute CDATA #IMPLIED>
+<!ATTLIST token name CDATA #REQUIRED>
+<!ATTLIST token value CDATA #IMPLIED>
+<!ATTLIST script element CDATA #IMPLIED>
+<!ATTLIST script event CDATA #IMPLIED>
+<!ATTLIST script value CDATA #IMPLIED>

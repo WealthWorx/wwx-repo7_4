@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT accessor-config (param*)>
+<!ELEMENT application (provider,accessor-config?)>
+<!ATTLIST application name CDATA #REQUIRED>
+<!ATTLIST application
+	accessor (com.appiancorp.asl2.connect.config.accessor.CommonsPoolingAccessor|com.appiancorp.asl2.connect.config.accessor.SingletonServiceAccessor) #REQUIRED
+	name ID #REQUIRED
+>
+<!ELEMENT asl-config (asl-connect?)>
+<!ELEMENT asl-connect (application*,services)>
+<!ELEMENT param EMPTY>
+<!ATTLIST param
+	name NMTOKEN #REQUIRED
+	value CDATA #REQUIRED
+>
+<!ELEMENT provider (param*)>
+<!ATTLIST provider factory NMTOKEN #REQUIRED>
+<!ELEMENT service EMPTY>
+<!ATTLIST service
+	application NMTOKEN #REQUIRED
+	interface NMTOKEN #REQUIRED
+	name ID #REQUIRED
+>
+<!ELEMENT services (service+)>
+
+<!ENTITY WHEN_EXHAUSTED_FAIL "0">
+<!ENTITY WHEN_EXHAUSTED_BLOCK "1">
+<!ENTITY WHEN_EXHAUSTED_GROW "2">

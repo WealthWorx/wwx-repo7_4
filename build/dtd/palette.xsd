@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<xsi:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema">
+
+  <xsi:element name="palette-categories" type="palette-categoriesType"/>
+  
+  <xsi:complexType name="palette-categoriesType">
+    <xsi:sequence>
+      <xsi:element name="palette-category" type="palette-categoryType" maxOccurs="unbounded"/>
+    </xsi:sequence>
+  </xsi:complexType>
+
+  <xsi:complexType name="palette-categoryType">
+    <xsi:sequence>
+      <xsi:element name="palettes" type="palettesType" minOccurs="0"/>
+    </xsi:sequence>
+    <xsi:attribute name="name" type="xsi:string" use="required"/>
+  </xsi:complexType>
+
+  <xsi:complexType name="palettesType">
+    <xsi:sequence>
+      <xsi:element name="palette" type="paletteType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsi:sequence>
+  </xsi:complexType>
+  
+  <xsi:complexType name="paletteType">
+    <xsi:all>
+      <xsi:element name="name" type="xsi:string"/>
+      <xsi:element name="items" type="itemsType" minOccurs="0"/> 
+    </xsi:all>
+  </xsi:complexType>
+
+  <xsi:complexType name="itemsType">
+    <xsi:sequence>
+      <xsi:element name="item" type="itemType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsi:sequence>
+  </xsi:complexType>
+
+  <xsi:complexType name="itemType">
+    <xsi:all>
+      <xsi:element name="name" type="xsi:string"/>
+      <xsi:element name="palette-icon" minOccurs="0"/>
+      <xsi:element name="canvas-icon" minOccurs="0"/>
+      <xsi:element name="activity-class-schema-local-id" type="xsi:string"/>
+    </xsi:all>
+  </xsi:complexType>
+</xsi:schema> 

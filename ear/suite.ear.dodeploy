@@ -1,0 +1,1 @@
+The presence of this file with the suffix .dodeploy triggers JBoss to deploy the ear.  It will be renamed automatically to .deployed if successful, or .failed if deployment fails.

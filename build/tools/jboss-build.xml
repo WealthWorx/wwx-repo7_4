@@ -1,0 +1,240 @@
+<project name="Webapp Precompilation" default="jspc" basedir="."> 
+<!-- ###########################################################################
+##### For compilation, you need to define four properties:
+##### 1. JAVA_HOME environment variable - make sure that it is correctly set for where JDK is installed
+##### 2. ANT_HOME environment variable - make sure that it is correctly set for where ant is installed. You will need ant-contrib*.jar under #####    ANT_HOME/lib for the script to work
+##### 3. jboss.home - this property value should be set below to where JBoss 3.2.5/4.0.2 application server is installed
+##### 4. webapp.home   - this property value should be set to where AE is installed. The suite directory within AE installation will be used #####    for jsp precompilation
+##### 5. target.dir    - set this property value to where translated java and compiled class files for jsps should be output. They will be #####    copied under jsp-java and jsp-classes directories respectively within that directory
+############################################################################### -->
+
+ <property environment="env"/>
+  <!-- Java Home will be used for running Java interpreter with jspc class, and for compiling translated jsps -->
+  <property name="java.home"            location="${env.JAVA_HOME}" />
+  <property name="ant.home"		location="{env.ANT_HOME}"/>
+  <!-- JBoss app server installation location - the jars will be loaded in java and javac classpath  -->
+  <property name="jboss.home"           location="c:/jboss-4.0.2"/>
+  <property name="jboss.deploy.dir"     location="${jboss.home}/server/all/deploy"/>
+  <!-- AE installation for pre-compiling jsps -->
+  <property name="webapp.home"          location="c:/athena" />
+  <property name="webapp.name"          value="suite" />
+  <property name="webapp.path"          location="${webapp.home}${file.separator}${webapp.name}"/>
+  <property name="webapp.web.inf"       location="${webapp.path}${file.separator}WEB-INF" />
+  <!-- Target location where JSP translator output (java files) and compiled classes will be stored -->
+  <property name="target.dir"			location="c:/jsp-precompilation/jboss"/>
+  <property name="target.dir.java"      location="${target.dir}${file.separator}jsp-java" />
+  <property name="target.dir.classes"   location="${target.dir}${file.separator}jsp-classes" />
+
+  <!-- Number of parallel java threads that will be run for JSP translation. Too high value will result in CPU starvation of threads and too much context switching. Too low value may result in CPU underutilization. 4 threads per CPU seems ok in QA tests -->
+  <property name="num.java.threads"		value="2" />
+
+
+<target name="jspc" description="Pre-compile JSPs">
+    <path id="jspc.classpath">
+
+        <!-- tools.jar is needed for javac class -->
+ 	<!-- 	<pathelement location="${java.home}/../lib/tools.jar"/> -->
+		
+		<pathelement location="${webapp.web.inf}/classes"/>
+        <fileset dir="${webapp.web.inf}/lib">
+			<include name="*.jar"/>
+        </fileset>
+		<!-- Load Tomcat Jars in the classpath before Ant jars. There have been reports of compilation failing because of conflicts between Ant and Tomcat classes -->  
+        <fileset dir="${jboss.deploy.dir}/jbossweb-tomcat55.sar">
+            <include name="*.jar"/>
+        </fileset>
+
+		<fileset dir="${jboss.home}/server/all/lib">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${ant.home}/lib">
+            <include name="*.jar"/>
+        </fileset>
+  
+    </path>
+
+	<!-- Translated jsps will be stored in ${target.dir}/jsp-java, and compiled classes will be stored in ${target.dir}/jsp-classes -->
+
+    <mkdir dir="${target.dir.java}"/>
+    <mkdir dir="${target.dir.classes}"/>
+
+	<!-- For each of the directories under docroot, jspc and javac will be called on the jsps in each directory. For speedy compilation, five threads will be executed in parallel, one for "TranslateJsp" task in each of the directory. Depending on the machine configuration, you may increase or decrease number of threads to prevent cpu underutilization or starving because of too many threads. Please read Ant documentation for threadCount under "Ant Tasks -> Core Tasks -> Parallel" -->
+
+	<!-- Be careful about the tasks that are included under "parallel" tag below. If any of the tasks is not independent of others, it will lead to issues, e.g. when one task tries to read a class for dependency information while other task is writing the class file -->
+
+	  <parallel threadCount="${num.java.threads}">
+	  <antcall target="TranslateJsp" inheritAll="true">
+		<param name="sub.dir" value="admin"/>
+	  </antcall>
+	  <antcall target="TranslateJsp" inheritAll="true">
+		<param name="sub.dir" value="analytics"/>
+	  </antcall>
+	  <antcall target="TranslateJsp" inheritAll="true">
+		<param name="sub.dir" value="collaboration"/>
+	  </antcall>
+	  <antcall target="TranslateJsp" inheritAll="true">
+		<param name="sub.dir" value="components"/>
+	  </antcall>
+	  <antcall target="TranslateJsp" inheritAll="true">
+		<param name="sub.dir" value="forums"/>
+	  </antcall>
+	  <antcall target="TranslateJsp" inheritAll="true">
+		<param name="sub.dir" value="framework"/>
+	  </antcall>
+	  <antcall target="TranslateJsp" inheritAll="true">
+		<param name="sub.dir" value="knowledge"/>
+	  </antcall>
+	  <antcall target="TranslateJsp" inheritAll="true">
+		<param name="sub.dir" value="ntf"/>
+	  </antcall>
+	  <antcall target="TranslateJsp" inheritAll="true">
+		<param name="sub.dir" value="personalization"/>
+	  </antcall>
+	  <antcall target="TranslateJsp" inheritAll="true">
+		<param name="sub.dir" value="portal"/>
+	  </antcall>
+	  <antcall target="TranslateJsp" inheritAll="true">
+		<param name="sub.dir" value="process"/>
+	  </antcall>
+	  <antcall target="TranslateJsp" inheritAll="true">
+		<param name="sub.dir" value="portlet"/>
+	  </antcall>
+	  <antcall target="TranslateJsp" inheritAll="true">
+		<param name="sub.dir" value="webservices"/>
+	  </antcall> 
+	</parallel>
+
+	<!-- Compile the translated jsps in the second step. Provide relative path to translated java files for each AE suite component -->
+
+	<antcall target="CompileTranslatedJsp" inheritAll="true">
+		<param name="sub.dir" value="org/apache/jsp/admin"/>
+	  </antcall>
+
+	<antcall target="CompileTranslatedJsp" inheritAll="true">
+		<param name="sub.dir" value="org/apache/jsp/analytics"/>
+	  </antcall>
+
+
+	<antcall target="CompileTranslatedJsp" inheritAll="true">
+		<param name="sub.dir" value="org/apache/jsp/collaboration"/>
+	  </antcall>
+
+	<antcall target="CompileTranslatedJsp" inheritAll="true">
+		<param name="sub.dir" value="org/apache/jsp/components"/>
+	  </antcall>
+
+	<antcall target="CompileTranslatedJsp" inheritAll="true">
+		<param name="sub.dir" value="org/apache/jsp/forums"/>
+	  </antcall>
+
+	<antcall target="CompileTranslatedJsp" inheritAll="true">
+		<param name="sub.dir" value="org/apache/jsp/framework"/>
+	  </antcall>
+
+	<antcall target="CompileTranslatedJsp" inheritAll="true">
+		<param name="sub.dir" value="org/apache/jsp/knowledge"/>
+	  </antcall>
+
+	<antcall target="CompileTranslatedJsp" inheritAll="true">
+		<param name="sub.dir" value="org/apache/jsp/ntf"/>
+	  </antcall>
+
+	<antcall target="CompileTranslatedJsp" inheritAll="true">
+		<param name="sub.dir" value="org/apache/jsp/personalization"/>
+	  </antcall>
+
+	<antcall target="CompileTranslatedJsp" inheritAll="true">
+		<param name="sub.dir" value="org/apache/jsp/portal"/>
+	  </antcall>
+
+	<antcall target="CompileTranslatedJsp" inheritAll="true">
+		<param name="sub.dir" value="org/apache/jsp/portlet"/>
+	  </antcall>
+
+	<antcall target="CompileTranslatedJsp" inheritAll="true">
+		<param name="sub.dir" value="org/apache/jsp/process"/>
+	  </antcall>
+  
+	<antcall target="CompileTranslatedJsp" inheritAll="true">
+		<param name="sub.dir" value="org/apache/jsp/webservices"/>
+	  </antcall>
+
+</target>
+
+
+ <!-- ============================== Translate each JSP into Java code ==============================   -->
+ 
+  <target description="Translate and compile the jsps" name="TranslateJsp">
+    <!-- Print the name of Jsp being translated and compiled -->
+    <echo message="${webapp.path}${file.separator}${sub.dir}" />
+    <!-- Call JspC to translate the jsp. The java output will be stored in ${target.dir}/jsp-java -->
+   <!-- Check if docroot/collaboration folder is being compiled. If it is, exclude the jsps that don't include include_java.jsp. These jsps are not standalone jsps and shouldn't be compiled -->
+
+    <if>
+   	<equals arg1="${sub.dir}" arg2="collaboration" />
+    <then>
+    <fileset dir="${webapp.path}${file.separator}${sub.dir}" id="jsp.existence" excludes="delfilenotif.jsp, docstree-frag.jsp, doctree-frag.jsp, eswitchfrag.jsp, eswitchfrago.jsp, searchkdb.jsp, searchuserresultfrag.jsp, kcuseraccesstable-frag.jsp, taglibs-frag.jsp,successtype.jsp,kcgroupaccesstable-frag.jsp,searchgroupresultfrag.jsp, folstree-frag.jsp, recnotif.jsp" >
+	  <include name="**/*.jsp"/>
+    </fileset>
+    </then>
+   <!-- Check if docroot/knowledge folder is being compiled. If it is, exclude the jsps that don't include include_java.jsp. These jsps are not standalone jsps and shouldn't be compiled -->
+    <elseif>
+   	<equals arg1="${sub.dir}" arg2="knowledge" />
+    <then>
+    <fileset dir="${webapp.path}${file.separator}${sub.dir}" id="jsp.existence" excludes="folstree-frag*jsp" >
+	  <include name="**/*.jsp"/>
+    </fileset>
+    </then>
+   </elseif>
+   <!-- Check if docroot/portal folder is being compiled. If it is, exclude the jsps that don't include include_java.jsp. These jsps are not standalone jsps and shouldn't be compiled -->
+    <elseif>
+   	<equals arg1="${sub.dir}" arg2="portal" />
+    <then>
+   <!-- Include css/standard_styles.css and js/standard_scripts.js for compilation as they are jsps -->
+    <fileset dir="${webapp.path}${file.separator}${sub.dir}" id="jsp.existence" excludes="portal_page_toolbar.jsp" includes="**/*.jsp, css/standard_styles.css, js/standard_scripts.js">
+    </fileset>
+    </then>
+   </elseif>
+    <else>
+    <fileset dir="${webapp.path}${file.separator}${sub.dir}" id="jsp.existence" >
+	  <include name="**/*.jsp"/>
+    </fileset>
+    </else>
+    </if>
+    <pathconvert pathsep=" " property="jsp.list" refid="jsp.existence"/>
+	<if>
+	 <equals arg1="${jsp.list}" arg2="" />
+	 <then>
+	   <echo message="No jsp on ${webapp.path}${file.separator}${sub.dir}" />
+	 </then>
+	 <else>
+		<java classname="org.apache.jasper.JspC"
+		  jvm="${java.home}${file.separator}bin${file.separator}java"
+          classpathref="jspc.classpath"
+          fork="yes">
+        <arg line="-v -d ${target.dir.java} -poolingEnabled true ${jsp.list}"/>
+    </java>
+		<echo message="JSPs translated: ${webapp.path}${file.separator}${sub.dir}" />
+	 </else>
+	</if>
+	</target>
+
+
+ 
+
+  
+  <!-- ============================== Compile translated Jsps ==============================   -->
+  <target description="Translate and compile the jsps" name="CompileTranslatedJsp">
+
+	<echo message="${sub.dir}" /> 
+	<!-- Call javac to compile the source code in ${target.dir}/jsp-java and store it in ${target.dir}/jsp-classes -->
+    <javac srcdir="${target.dir.java}${file.separator}${sub.dir}"
+           destdir="${target.dir.classes}"
+           debug="on"
+		   failonerror="false"
+		   fork="yes"
+		   memoryMaximumSize="512m"
+           classpathref="jspc.classpath"/>
+  </target>
+
+</project>

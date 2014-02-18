@@ -1,0 +1,9 @@
+<!--ELEMENTS-->
+<!ELEMENT token-display-config (token-types)>
+<!ELEMENT token-types (token-type*)>
+<!ELEMENT token-type EMPTY>
+
+<!--ATTRIBUTES-->
+<!ATTLIST token-type name CDATA #REQUIRED>
+<!ATTLIST token-type displayClass CDATA #REQUIRED>
+<!ATTLIST token-type config CDATA #IMPLIED>

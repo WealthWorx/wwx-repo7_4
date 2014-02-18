@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<project name="menu" default="menu" basedir=".">
+  <property environment="env" />
+  <!-- The only property loaded at this moment is $(menu.basedir} and it will remain-->
+  <!-- constant for every project that imports this file-->
+  <dirname property="menu.basedir" file="${ant.file.menu}"/>
+
+  <target name="menu-init">
+    <tstamp />
+    <condition property="menu.environment" value="${env.APPIAN_PROJECT_ENV}">
+      <isset property="env.APPIAN_PROJECT_ENV"/>
+    </condition>
+	<condition property="menu.action" value="${env.APPIAN_PROJECT_ACTION}">
+      <isset property="env.APPIAN_PROJECT_ACTION"/>
+    </condition>
+  </target>
+
+  <target name="menu-environment" description="Entry point for build script" unless="menu.environment" >
+    <!-- display the build choices -->
+    <echo message="Available environments:"/>
+    <echo message=" 1) Local build"/>
+    <echo message=" 2) Dev build"/>
+    <echo message=" 3) Staging build"/>
+    <echo message=" 4) Production build"/>
+    <echo message=" Q) Quit"/>
+    <echo message=" "/>
+    <echo message="You can avoid this menu by setting the environment variable"/>
+    <echo message="APPIAN_PROJECT_ENV to be equal to the value you select here"/>
+    <echo message=" "/>
+	
+	
+    <!-- Get the user's environment -->
+    <input message="Choose an environment: "
+      validargs="1,2,3,4,Q"
+      addproperty="menu.environment"/>
+    <!-- see if the user selected 'exit' -->
+    <fail message="Build aborted by user.">
+      <condition>
+        <equals arg1="Q" arg2="${menu.environment}"/>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="menu" description="Entry point for build script" depends="menu-init,menu-environment">
+    <echo message="menu environment: ${menu.environment}" />
+    <!-- display available actions -->
+    <echo message="Choose an action:"/>
+    <!-- <echo message="  1) First Config"/> -->
+    <echo message="  0) Install JBoss and Deploy all"/>
+	<echo message="  1) Deploy all"/>
+    <echo message="  2) Deploy modifications"/>
+	<echo message="  3) Deploy engine configuration files only"/>
+    <echo message="  4) Deploy all (static)"/>
+    <echo message="  5) Deploy modifications (static)"/>
+    <echo message="  6) Deploy plugins (compile/jar)"/>
+    <echo message="  Q) Quit"/>
+    <echo message=" "/>
+    <echo message="You can avoid this menu by setting the environment variable"/>
+    <echo message="APPIAN_PROJECT_ACTION to be equal to the value you select here"/>
+    <echo message=" "/>
+    <input message="Choose an action: "
+      validargs="0,1,2,3,4,5,6,Q"
+      addproperty="menu.action"/>
+        <!-- check to see if user aborted -->
+    <fail message="Build aborted by user.">
+      <condition>
+        <equals arg1="Q" arg2="${menu.action}"/>
+      </condition>
+    </fail>
+    <!-- set the appropriate props file to use -->
+    <condition property="environment" value="local">
+      <equals arg1="1" arg2="${menu.environment}"/>
+    </condition>
+    <condition property="environment" value="dev">
+      <equals arg1="2" arg2="${menu.environment}"/>
+    </condition>
+    <condition property="environment" value="staging">
+      <equals arg1="3" arg2="${menu.environment}"/>
+    </condition>
+    <condition property="environment" value="prod">
+      <equals arg1="4" arg2="${menu.environment}"/>
+    </condition>
+    <!-- <condition property="action" value="config-appian">
+      <equals arg1="1" arg2="${menu.action}"/>
+    </condition> -->
+    <condition property="action" value="installJboss">
+      <equals arg1="0" arg2="${menu.action}"/>
+    </condition>
+	<condition property="action" value="full">
+      <equals arg1="1" arg2="${menu.action}"/>
+    </condition>
+    <condition property="action" value="update">
+      <equals arg1="2" arg2="${menu.action}"/>
+    </condition>
+	<condition property="action" value="engines">
+      <equals arg1="3" arg2="${menu.action}"/>
+    </condition>
+    <condition property="action" value="app-server-static-full">
+      <equals arg1="4" arg2="${menu.action}"/>
+    </condition>
+    <condition property="action" value="app-server-static">
+      <equals arg1="5" arg2="${menu.action}"/>
+    </condition>
+	<condition property="action" value="plugins">
+      <equals arg1="6" arg2="${menu.action}"/>
+    </condition>
+    <condition property="overwrite" value="false" else="true">
+      <or>
+        <equals arg1="${menu.action}" arg2="5"/>
+        <equals arg1="${menu.action}" arg2="8"/>
+        <equals arg1="${menu.action}" arg2="12"/>
+        <equals arg1="${menu.action}" arg2="17"/>
+        <equals arg1="${menu.action}" arg2="19"/>
+      </or>
+    </condition>
+
+    <!-- call appropriate actions, based on menu choice -->
+    <ant target="${action}">
+      <property name="overwrite" value="${overwrite}"/>
+      <property name="filters" value="${environment}"/>
+      <property file="${menu.basedir}/${environment}.properties"/>
+      <property file="${menu.basedir}/build.properties"/>
+      <property file="${menu.basedir}/default.properties"/>
+    </ant>
+  </target>
+
+
+</project>

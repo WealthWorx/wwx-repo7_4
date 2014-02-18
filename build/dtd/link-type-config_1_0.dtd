@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated from link-type-config.xml by XMLBuddy -->
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT link-type (name,description,prefix,suffix,localObjectType)>
+<!ELEMENT link-types (link-type+)>
+<!ELEMENT localObjectType (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT prefix (#PCDATA)>
+<!ELEMENT suffix EMPTY>

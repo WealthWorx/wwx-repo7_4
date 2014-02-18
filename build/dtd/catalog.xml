@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE catalog PUBLIC 
+   "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN"
+   "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+  <public publicId="-//Appian Corporation//DTD ASL Configuration 1.0//EN"
+   uri="asl-config_1_0.dtd"/>
+  <public publicId="-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.0//EN"
+   uri="validator_1_0.dtd"/>
+  <public publicId="-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN"
+   uri="validator_1_1.dtd"/>
+  <public publicId="-//Apache Software Foundation//DTD Tiles Configuration//EN"
+   uri="tiles-config_1_0.dtd"/>
+  <public publicId="-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+   uri="tiles-config_1_1.dtd"/>
+  <public publicId="-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+   uri="hibernate-mapping_2_0.dtd"/>
+   <public publicId="-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+   uri="struts-config_1_1.dtd"/>
+  <public publicId="-//Appian Corporation//DTD Hierarchy Configuration //EN"
+   uri="hierarchy-config.dtd"/>
+  <public publicId="-//Appian Corporation//DTD ASI Grid Configuration //EN"
+   uri="grid-config.dtd"/>
+  <public publicId="-//Apache Software Foundation//DTD Commons Digester Rules Configuration//EN"
+   uri="digester_rules.dtd"/>
+  <public publicId="-//Appian Corporation//DTD Wizards Configuration //EN"
+   uri="wizards-config.dtd"/>
+  <public publicId="-//Appian Corporation//DTD Portlet Type Configuration 1.0//EN"
+   uri="portlet-type-config_1_0.dtd"/>
+  <public publicId="-//Appian Corporation//DTD ASI Display Configuration //EN"
+   uri="token-display-config.dtd"/>
+  <public publicId="-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+   uri="web-app_2_3.dtd"/>
+  <public publicId="-//Appian Corporation//DTD Event Configuration //EN"
+   uri="event-config.dtd"/>
+   <public publicId="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" uri="web-jsptaglibrary_1_1.dtd"/>
+   <public publicId="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN" uri="web-jsptaglibrary_1_2.dtd"/>
+   <public publicId="-//W3C//DTD XHTML 1.0 Frameset//EN" uri="xhtml1-frameset.dtd"/>
+   <public publicId="-//Appian Corporation//DTD Link Type Configuration 1.0//EN" uri="link-type-config_1_0.dtd"/>
+   <public publicId="-//Appian Corporation//DTD Metadata Configuration 1.0//EN" uri="metadata-config_1_0.dtd"/>
+    <public publicId="-//Appian Corporation//DTD Environment Configuration 1.0//EN" uri="environment-config_1_0.dtd"/>
+</catalog>

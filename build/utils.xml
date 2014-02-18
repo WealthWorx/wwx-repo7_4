@@ -1,0 +1,298 @@
+<project name="create-load-empty" basedir="../" default="help">
+
+	<import file="basic.xml"/>
+
+	<property name="ant-contrib.jar" location="build/lib/ant-contrib-1.0b3.jar"/>
+	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpath="${ant-contrib.jar}"/>
+	<taskdef name="forget" classname="net.sf.antcontrib.process.ForgetTask" classpath="${ant-contrib.jar}"/>
+	<taskdef name="if" classname="net.sf.antcontrib.logic.IfTask" classpath="${ant-contrib.jar}"/>
+
+	<loadproperties srcFile="${basic.basedir}/build/${environment}.properties"/>
+
+	<property name="installer.dest.dir" location="${appian.home}"/>
+
+	<property name="ae.install" location="${installer.dest.dir}"/>
+	<property name="admin.dir" location="${ae.install}/_admin"/>
+	<property name="admin.scripts.dir" location="${ae.install}/_admin/_scripts"/>
+	<property name="server.dir" location="${ae.install}/server"/>
+	<tstamp>
+		<format property="current.time" pattern="MM-dd-yyyy-hh-mm-aa"/>
+	</tstamp>
+	<property name="backup.dir" location="${ae.install}/_backup/${current.time}"/>
+	<property name="project.local.build.install" location="."/>
+
+	<condition property="os.ext" value="bat" else="sh">
+		<os family="windows"/>
+	</condition>
+	<condition property="os.exec" value="cmd.exe" else="sh">
+		<os family="windows"/>
+	</condition>
+	<condition property="os.prefix" value="/c" else="">
+		<os family="windows"/>
+	</condition>
+
+	<property name="jboss.bin.dir" value="${ae.install}/bin/jboss/jboss-5.1.0.GA/bin"/>
+
+	<property name="admin.dir.to.delete" value="accdocs1,accdocs2,accdocs3,models,process_notes,validation,search/data,search/index"/>
+	<property name="services" value="personalization,portal,forums,notifications,channels,collaboration,metadata,design,exec,analytics"/>
+
+	<macrodef name="wait-for-services-to-be-up">
+		<sequential>
+			<echo message="Waiting for services to be up..."/>
+			<java classname="com.appiancorp.tools.WaitForServers" fork="true" dir="${admin.scripts.dir}">
+				<classpath>
+					<pathelement location="${admin.scripts.dir}/classpath.jar"/>
+				</classpath>
+				<sysproperty key="log4j.defaultInitOverride" value="true"/>
+			</java>
+			<echo message="Services are up!"/>
+		</sequential>
+	</macrodef>
+
+
+
+	<macrodef name="appian-exec">
+		<attribute name="command" default=""/>
+		<attribute name="options" default=""/>
+		<attribute name="dir" default=""/>
+		<attribute name="os" default=""/>
+		<attribute name="spawn" default="false"/>
+		<sequential>
+			<exec dir="@{dir}" executable="${os.exec}" spawn="@{spawn}">
+				<env key="ADMIN_DIRECTORY" value="${admin.dir}"/>
+				<env key="ADMIN_SCRIPTS" value="${admin.scripts.dir}"/>
+				<env key="SERVER" value="${server.dir}"/>
+				<arg line="${os.prefix} @{command}.${os.ext} @{options}"/>
+				<!-- TODO: Fix this, this code segment fails on spawn=true (paurush.saxena)
+				<redirector>
+					<errorfilterchain>
+						<replacestring from="read: The pipe has been ended." to=""/>
+						<replacestring from="read:" to=""/>
+						<replacestring from="The pipe has been ended." to=""/>
+						<ignoreblank/>
+					</errorfilterchain>
+				</redirector> -->
+			</exec>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="runimporter">
+		<attribute name="username" default="${IMPORT_USERNAME}"/>
+		<attribute name="password" default="${IMPORT_PASSWORD}"/>
+		<attribute name="app-to-import" default="${DEFAULT_APP}"/>
+		<sequential>
+			<exec dir="${ae.install}/_admin/_scripts" executable="${os.exec}" spawn="false">
+				<arg line="${os.prefix} import.${os.ext} -u @{username} -p @{password} -f @{app-to-import}"/>
+			</exec>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="waitforstartup" description="Waits for the Application Server to become available">
+		<attribute name="url"/>
+		<element name="timeout-action" optional="true"/>
+		<sequential>
+			<echo message="Checking if application server is up now at @{url}" />
+			<waitfor maxwait="10" maxwaitunit="minute" checkevery="1000" timeoutproperty="@{url}.appserverTimeout">
+				<http url="@{url}" />
+			</waitfor>
+			<if>
+				<isset property="@{url}.appserverTimeout" />
+				<then>
+					<echo message="Application server not started" />
+				<timeout-action/>
+				</then>
+				<else>
+					<echo message="Application server is up now" />
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="waitforshutdown" description="Waits for the Application Server to be shutdown">
+		<attribute name="url"/>
+		<element name="timeout-action" optional="true"/>
+		<sequential>
+			<echo message="Waiting for shutdown to complete." />
+			<waitfor maxwait="2" maxwaitunit="minute" checkevery="5" checkeveryunit="second" timeoutproperty="appserverTimeout">
+				<not><http url="@{url}"/></not>
+			</waitfor>
+			<if>
+				<isset property="appserverTimeout" />
+				<then>
+					<echo message="Application server not shutdown" />
+					<timeout-action/>
+				</then>
+				<else>
+					<echo message="Application server is down now" />
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
+
+	<target name="import-apps">
+		<for list="${app.names}" param="app.name">
+			<sequential>
+				<echo message="importing: '${app.dir}/@{app.name}'"/>
+				<runimporter password="${admin.password}" username="${admin.id}" app-to-import="'${app.dir}/@{app.name}'"/>
+			</sequential>
+		</for>
+	</target>
+
+	<target name="stop-suite">
+		<appian-exec command="stop-suite" dir="${server.dir}/_scripts"/>
+	</target>
+
+	<target name="start-suite">
+		<appian-exec command="start-suite" dir="${server.dir}/_scripts" spawn="true"/>
+		<wait-for-services-to-be-up/>
+	</target>
+
+	<target name="create-load-empty" depends="backup-kdbs">
+		<for list="${admin.dir.to.delete}" param="dir.to.delete">
+			<sequential>
+				<delete dir="${admin.dir}/@{dir.to.delete}" quiet="true"/>
+			</sequential>
+		</for>
+		<delete>
+			<fileset dir="${server.dir}" includes="**/*.kdb"/>
+		</delete>
+		<mkdir dir="${ae.install}/_admin/validation"/>
+		<for list="${services}" param="services.to.create">
+			<sequential>
+				<appian-exec command="create" dir="${server.dir}/_scripts/@{services.to.create}"/>
+			</sequential>
+		</for>
+		<appian-exec command="start-suite" dir="${server.dir}/_scripts"/>
+		<appian-exec command="load" dir="${admin.scripts.dir}"/>
+	</target>
+
+	<target name="clean-ear">
+		<delete dir="${ae.install}/runtime_ear"/>
+		<copy todir="${ae.install}/runtime_ear">
+			<fileset dir="${ae.install}/ear"/>
+		</copy>
+	</target>
+
+	<target name="backup-kdbs">
+		<mkdir dir="${backup.dir}"/>
+		<for list="${admin.dir.to.delete}" param="dir.to.delete">
+			<sequential>
+				<copy todir="${backup.dir}/_admin/@{dir.to.delete}" failonerror="false">
+					<fileset dir="${admin.dir}/@{dir.to.delete}" includes="**/*"/>
+				</copy>
+			</sequential>
+		</for>
+		<copy todir="${backup.dir}/server" failonerror="false">
+			<fileset dir="${server.dir}" includes="**/*.kdb"/>
+		</copy>
+	</target>
+
+	<target name="start-jboss">
+		<echo message="Starting jboss at ${jboss.bin.dir}"/>
+		<forget>
+			<exec executable="${os.exec}" dir="${jboss.bin.dir}" spawn="true">
+				<arg line="${os.prefix} run.${os.ext} -c default" />
+			</exec>
+		</forget>
+		<waitforstartup url="http://localhost:8080/suite">
+			<timeout-action>
+				<fail message="Build process aborted because the application server didn't come up within the specified timeout period of 10 minutes" />
+			</timeout-action>
+		</waitforstartup>
+	</target>
+
+	<target name="stop-jboss">
+		<exec executable="${os.exec}" dir="${jboss.bin.dir}" failonerror="false" spawn="false">
+			<arg line="${os.prefix} shutdown.${os.ext} -S" />
+		</exec>
+		<waitforshutdown url="http://localhost:8080">
+			<timeout-action>
+				<echo message="WARNING: JBoss not shutdown. Forcing JVM exit with error code 255" level="warning" />
+				<exec executable="${os.exec}" dir="${jboss.bin.dir}"  failonerror="false" spawn="false">
+					<arg line="${os.prefix} shutdown.${os.ext} -e 255" />
+				</exec>
+			</timeout-action>
+		</waitforshutdown>
+	</target>
+
+	<target name="install-suite">
+		<echo message="Installing from: ${installer.source.dir}/${installer.source.file}"/>
+		<echo message="Installing to: ${installer.dest.dir}"/>
+		<if>
+			<available file="${installer.dest.dir}" type="dir"/>
+			<then>
+				<fail message="ERROR: '${installer.dest.dir}' already exists. Please check the installation path."/>
+			</then>
+		</if>
+		<exec dir="${installer.source.dir}" executable="${installer.source.file}" resolveexecutable="true" osfamily="windows">
+	                <arg line="/mode silent"/>
+                        <arg line="/password ${installer.password}"/>
+                        <arg line="/prefix ${installer.dest.dir}"/>
+                </exec>
+		<exec dir="${installer.source.dir}" executable="${installer.source.file}" resolveexecutable="true" os="Linux,Solaris,SunOS">
+			<arg line="--mode silent --password ${installer.password} --prefix ${installer.dest.dir}"/>
+		</exec>
+		<!-- Copy K licenses -->
+		<copy todir="${installer.dest.dir}/server/_bin/k/win64" file="${k.lic.file.location}"/>
+		<copy todir="${installer.dest.dir}/server/_bin/k/win32" file="${k.lic.file.location}"/>
+		<copy todir="${installer.dest.dir}/server/_bin/k/linux64" file="${k.lic.file.location}"/>
+		<copy todir="${installer.dest.dir}/server/_bin/k/linux32" file="${k.lic.file.location}"/>
+		<copy todir="${installer.dest.dir}/server/_bin/k/solaris64" file="${k.lic.file.location}"/>
+	</target>
+
+	<target name="install-patches">
+		<for list="${hotfix.file.list}" param="hotfix">
+			<sequential>
+				<unzip src="${hotfix.dir}/@{hotfix}" dest="${appian.home}"/>
+			</sequential>
+		</for>
+	</target>
+
+	<target name="install-ae" depends="install-suite,install-patches"/>
+
+	<target name="configure">
+		<ant dir="${project.local.build.install}" target="start">
+			<property name="appian.home" value="${installer.dest.dir}"/>
+			<property name="appian.data.home" value="${installer.dest.dir}/_admin"/>
+		</ant>
+	</target>
+
+	<target name="clean-all" depends="backup-kdbs,clean-ear,create-load-empty,stop-suite"/>
+	<target name="start-appian" depends="start-suite,start-jboss"/>
+	<target name="stop-appian" depends="stop-suite,stop-jboss"/>
+	<target name="help">
+		<echo>
+		Please select from the following options:
+		-------------------------------------------------------------------
+		clean-all	:	Cleans the installation on any changes including
+					kdbs, js, plugins etc. The installation is as good
+					as a new installation.
+
+		configure	:	Configures the installation by calling the existing
+					build setup
+
+		install-ae	:	Installs Appian and copies the k3.lic
+
+		start-appian:	Starts the k services as well as Jboss
+
+		stop-appian	:	Stops the k services as well as Jboss
+
+		start-suite	:	Just starts the k services
+
+		stop-suite	:	Just stops the k services
+
+		start-jboss	:	Just start the jboss
+
+		stop-jboss	:	Just stops the jboss
+
+		help		:	Displays this option
+
+		-------------------------------------------------------------------
+
+		</echo>
+	</target>
+
+	<target name="install-all" depends="install-ae,configure,start-appian,import-apps"/>
+
+</project>

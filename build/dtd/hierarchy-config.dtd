@@ -1,0 +1,55 @@
+<!--ELEMENTS-->
+<!ELEMENT hierarchy-config (dynamic-node-builders?,dynamic-node-types?,static-nodes?,menu-type*)>
+
+<!ELEMENT dynamic-node-builders (builder+)>
+<!ELEMENT builder (config-param*)>
+<!ELEMENT config-param EMPTY>
+
+<!ELEMENT dynamic-node-types (node-type+)>
+<!ELEMENT node-type (class,icon-targeted?,icon?)>
+<!ELEMENT class (id?,name?)>
+<!ELEMENT id (#PCDATA)>
+<!ELEMENT name (token*)>
+<!ELEMENT token EMPTY>
+<!ELEMENT icon-targeted (#PCDATA)>
+<!ELEMENT icon (#PCDATA)>
+
+<!ELEMENT static-nodes (static-node+)>
+<!ELEMENT static-node (children?)>
+<!ELEMENT children (child+)>
+<!ELEMENT child (#PCDATA)>
+
+<!ELEMENT menu-type (node+)>
+<!ELEMENT node EMPTY>
+
+
+<!--ATTRIBUTES-->
+<!ATTLIST builder name CDATA #REQUIRED>
+<!ATTLIST builder type CDATA #REQUIRED>
+<!ATTLIST config-param name CDATA #REQUIRED>
+<!ATTLIST config-param value CDATA #REQUIRED>
+
+<!ATTLIST node-type name CDATA #REQUIRED>
+<!ATTLIST class type CDATA #REQUIRED>
+<!ATTLIST token name CDATA #REQUIRED>
+<!ATTLIST token value CDATA #IMPLIED>
+<!ATTLIST icon alt CDATA #IMPLIED>
+<!ATTLIST icon-targeted alt CDATA #IMPLIED>
+
+
+<!ATTLIST static-node id CDATA #REQUIRED>
+<!ATTLIST static-node label CDATA #REQUIRED>
+<!ATTLIST static-node href CDATA #IMPLIED>
+<!ATTLIST static-node target CDATA #IMPLIED>
+
+
+<!ATTLIST menu-type name CDATA #REQUIRED>
+<!ATTLIST menu-type type CDATA #IMPLIED>
+<!ATTLIST node name CDATA #REQUIRED>
+<!ATTLIST node builder CDATA #IMPLIED>
+<!ATTLIST node href CDATA #IMPLIED>
+<!ATTLIST node target CDATA #IMPLIED>
+<!ATTLIST node onclick CDATA #IMPLIED>
+<!ATTLIST node paramId CDATA #IMPLIED>
+<!ATTLIST node customParamId CDATA #IMPLIED>
+<!ATTLIST node paramType CDATA #IMPLIED>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gateway-config>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="forums"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="notify"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="notify-email"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="channels"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="content"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="collaboration-statistics"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="personalization"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="portal"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="metadata"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-design"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics0"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics1"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics2"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics3"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics4"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics5"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics6"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics7"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics8"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics9"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics10"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics11"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics12"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics13"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics14"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-analytics15"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution0"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution1"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution2"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution3"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution4"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution5"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution6"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution7"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution8"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution9"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution10"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution11"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution12"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution13"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution14"/>
+  <engine auto-database-save="@auto.checkpoint.enable@" name="process-execution15"/>
+  <windows>
+    <start-gateway-cmd>cmd /C start /MIN "GW: $(APP): $(GW_ID)" %APPIAN_EXEC% gw $(K2K_ID) $(GW_ID)</start-gateway-cmd>
+    <server-cmd>cmd /C start /MIN /D"$(SVR_DIR)" "APP: $(AE_APP): $(TITLE) [Appian]" %APPIAN_EXEC% %AE_SVRLIB%\adb $(BOOT) -l -p $(SVR_PORT) $(GW_PORT) $(GW_ID) hs $(GW_HS)</server-cmd>
+    <checkpoint-cmd>cmd /C start /MIN /D"$(SVR_DIR)" "CHK: $(AE_APP): $(TITLE) [Appian]" %APPIAN_EXEC% %AE_SVRLIB%\adb $(BOOT) -l checkpoint $(K2K_ID)</checkpoint-cmd>
+    <copy-process-cmd>cmd /C start /MIN /D"$(SVR_DIR)" "COPY: $(AE_APP): $(TITLE) [Appian]" %APPIAN_EXEC% %AE_SVRLIB%\copy_kdb $(K2K_ID)</copy-process-cmd>
+    <db-copy-cmd>$(AE_SVRSCRIPTS)\gateway\copy.bat $(DB) $(GW_ID) "$(SVR_DIR)" $(TO_ID) "$(TO_SVR_DIR)"</db-copy-cmd>
+  </windows>
+  <unix>
+    <start-gateway-cmd>$APPIAN_EXEC gw $(K2K_ID) $(GW_ID)</start-gateway-cmd>
+    <server-cmd>$(AE_SVRSCRIPTS)/gateway/exec_bg_redirect.sh $(SVR_DIR) '$(BOOT) -l -p $(SVR_PORT) $(GW_PORT) $(GW_ID) hs $(GW_HS)' gw-$(NAME)</server-cmd>
+    <checkpoint-cmd>$(AE_SVRSCRIPTS)/gateway/exec_bg_redirect.sh $(SVR_DIR) '$(BOOT) -l checkpoint $(K2K_ID)'</checkpoint-cmd>
+    <copy-process-cmd>$(AE_SVRSCRIPTS)/gateway/exec_bg_redirect_copy_kdb.sh $(SVR_DIR) $(K2K_ID)</copy-process-cmd>
+    <db-copy-cmd>$(AE_SVRSCRIPTS)/gateway/copy.sh $(DB) $(GW_ID) "$(SVR_DIR)" $(TO_ID) "$(TO_SVR_DIR)"</db-copy-cmd>
+    
+    <!-- setting added to give gateways additional time to find each other -->
+    <ping-timeout>1200</ping-timeout> 
+  </unix>
+</gateway-config>

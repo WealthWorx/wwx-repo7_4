@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<project name="basic" default="init" basedir=".">
+
+	<property name="ant-contrib.jar" location="lib/ant-contrib-1.0b3.jar"/>
+	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpath="${ant-contrib.jar}"/>
+	<taskdef name="forget" classname="net.sf.antcontrib.process.ForgetTask" classpath="${ant-contrib.jar}"/>
+	<taskdef name="if" classname="net.sf.antcontrib.logic.IfTask" classpath="${ant-contrib.jar}"/>
+
+  <!-- The only property loaded at this moment is $(basic.basedir} and it will remain-->
+  <!-- constant for every project that imports this file-->
+  <dirname property="basic.base" file="${ant.file.basic}"/>
+  <property name="basic.basedir" location="${basic.base}/.."/>
+  <dirname property="basic.basedir" file="${ant.file.basic}"/>
+
+  <!-- menu.xml includes the logic to extend the user menu ***************** -->
+  <import file="${basic.basedir}/build/menu.xml"/>
+
+  <target name="out-of-menu" description="init target for actions that do not go through the user menu"  unless="menu.environment">
+    <echo message="if this target is executed, menu.environment is not set" />
+    <property name="overwrite" value="false"/>
+    <property name="filters" value="local"/>
+    <loadproperties srcFile="${basic.basedir}/build/local.properties"/>
+    <loadproperties srcFile="${basic.basedir}/build/build.properties"/>
+    <echo message="appian.home: ${appian.home}"/>
+    <echo message="appserver.home: ${appserver.home}"/>
+    <echo message="MWS_SRC_DIR: ${MWS_SRC_DIR}"/>
+    <echo message="AE_DATA: ${AE_DATA}"/>
+  </target>
+
+  <target name="nonj2ee-classpaths" description="set classpath according to the menu.environment property" depends="out-of-menu">
+    <path id="appian.classpath">
+      <fileset dir="${appian.lib}">
+        <include name="**/*.jar" />
+      </fileset>
+    </path>
+    <property name="appian.classpath" refid="appian.classpath" />
+    <path id="project.classpath">
+      <fileset dir="${project.lib}">
+        <include name="**/*.jar" />
+      </fileset>
+    </path>
+    <property name="project.classpath" refid="project.classpath" />
+    <path id="build.classpath">
+      <fileset dir="${build.lib}">
+        <include name="**/*.jar" />
+      </fileset>
+      <pathelement location="${runtime.classes}"/>
+      <pathelement location="${build.suite.classes}"/>
+    </path>
+    <property name="build.classpath" refid="build.classpath" />
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${build.classpath}" />
+    <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpath="${build.classpath}"/>
+    <taskdef name="validate-AEwebxml" classname="com.appiancorp.tools.validation.ValidateAppianWebXml" classpath="${build.classpath}"/>
+  </target>
+  <target name="classpaths" description="set classpath according to the menu.environment property" depends="nonj2ee-classpaths">
+      <path id="j2ee.classpath">
+      <fileset dir="${appserver.lib}">
+        <include name="**/*.jar" />
+      </fileset>
+      <fileset dir="${env.JAVA_HOME}/jre/lib">
+        <include name="**/*.jar" />
+      </fileset>
+    </path>
+	</target>
+
+  <!-- setup *************************************************************** -->
+  <target name="init-filters" description="loads property files">
+  <filter filtersfile="${build}/${environment}.properties" />
+    <filter filtersfile="${build}/build.properties" />
+  </target>
+  
+  <target name="init" description="verifies properties on setup" depends="init-filters, classpaths">
+    <echo message="ant version: ${ant.version}" />
+    <echo message="java version: ${ant.java.version}" />
+    <condition property="isJBoss">
+      <equals arg1="${appserver.name}" arg2="jboss"/>
+    </condition>
+	<condition property="jbossExists">
+      <available file="${appserver.home}" type="dir"/>
+    </condition>
+    <condition property="isApache">
+      <equals arg1="${webserver.name}" arg2="apache"/>
+    </condition>
+    <echo message="application server is: ${appserver.name}" />
+    <condition property="isUnix">
+      <os family="unix" />
+    </condition>
+    <condition property="isWindows">
+      <os family="windows" />
+    </condition>
+    <condition property="isProduction">
+      <equals arg1="${conf.suite.PRODUCTION}" arg2="true"/>
+    </condition>
+    <osfamily property="osFamily"/>
+    <echo message="OS: ${osFamily}" />
+  </target>
+
+</project>

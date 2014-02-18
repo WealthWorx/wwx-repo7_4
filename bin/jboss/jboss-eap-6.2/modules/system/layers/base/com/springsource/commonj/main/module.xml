@@ -1,0 +1,8 @@
+<module xmlns="urn:jboss:module:1.0" name="com.springsource.commonj">
+  <resources>
+    <resource-root path="com.springsource.commonj-1.1.0.jar"/>
+  </resources>
+  <dependencies>
+    <module name="javax.api"/>
+  </dependencies>
+</module>

@@ -1,0 +1,5 @@
+<project name="PS Build" default="default" basedir="build">
+	<target name="default">
+		<ant antfile="build.xml" target="start" />
+  </target>
+</project>

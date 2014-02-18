@@ -1,0 +1,6 @@
+===Appian Additions===
+
+Cloyd:
+log4j.properties for jspc error msg.
+ant-appian-custom.jar contains additional validation.
+jsch-0.1.23.jar is used for scp/ssh.

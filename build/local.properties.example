@@ -1,0 +1,307 @@
+################################################################################
+# build properties #############################################################
+################################################################################
+
+appian.home=c\:/appian/appian7.4
+# UNC path to the Appian data storage location (collab docs, models, notes etc.). 
+# Change from the default ${appian.home}/_admin for distributed installations.
+appian.data.home=${appian.home}/_admin
+
+ae.version=7.4.0.0
+
+## uncomment the line below if you want to build plugins
+## to stop building the plugins, comment this line out
+#buildPlugins=build
+
+## used to determine which app server is being used.
+appserver.name=jboss
+
+############################################################################
+# JBoss configuration ######################################################
+############################################################################
+# Relevant only if using JBoss app server
+
+# Configure the JBoss installation path
+appserver.jboss.install=${appian.home}/bin/jboss
+appserver.home=${appserver.jboss.install}/jboss-eap-6.2
+appserver.jboss.bin=${appserver.home}/bin
+appserver.jboss.bin.run.conf.bat=standalone.conf.bat
+appserver.jboss.bin.run.conf=standalone.conf
+project.jboss=${basic.basedir}/bin/jboss/jboss-eap-6.2
+appserver.lib=${appserver.home}/modules
+appserver.cache=${appserver.home}/standalone/tmp/work/
+
+# Configure JBoss source directory and file
+jboss.installer.source.dir=
+jboss.installer.source.file=jboss-eap-6.2.0.zip
+jboss.management.user.username=
+jboss.management.user.password=
+
+################################################################################
+# application specific #########################################################
+################################################################################
+
+project.name=My Appian Project
+project.version.major=1
+project.version.minor=0
+
+################################################################################
+# webserver configuration ######################################################
+################################################################################
+
+## Web Server Static Directory
+#appian.static=c\:/appian-static
+#webserver.home=c:\/Program Files/Apache Group/Apache2
+## used to determine which web server is being used.
+#webserver.name=apache
+
+#################
+#### General ####
+#################
+
+conf.suite.SCHEME=http
+#conf.suite.PRIVATE_SCHEME=http
+## If the PRIVATE_SCHEME is set to https (a rare configuration), the following 
+## 3 properties must be set to the values appropriate to the ssl protocol and 
+## keystore information.  sslProtocol should be one of the value listed in 
+## http://java.sun.com/javase/6/docs/technotes/guides/security/StandardNames.html#SSLContext
+#conf.suite.sslProtocol=
+#conf.suite.keystoreFile=
+#conf.suite.keystorePass=
+## Used by both App Server and Engines to build up base URLs for links
+#conf.suite.APPLICATION_CONTEXT=
+
+# This is the URL that end users will be accessing the system from. It will be used for 
+# all links back into the system, for example in emails.
+# If using a web server like Apache HTTP, port :80 is implicit, so no need to specify it
+conf.suite.SERVER_AND_PORT=localhost:8080
+
+#This setting allows for a dropdown in the top right corner of the Tempo interface 
+#with links to published applications within the /apps interface.
+conf.navigation.SHOW_APPLICATIONS_MENU=false
+
+## The minutes of inactivity before the session timeout warning dialog appears
+resources.appian.ap.application.appian.ap.session.timeoutwarn=60
+
+## The BASE_PATH is the path to the directory that contains the accdocs*
+## directories referenced in server/_conf/partition.xml
+#conf.suite.BASE_PATH=
+
+## Copyright statements can be overridden using the following properties.  The
+## The 4 substitution parameters can be individually overriden with the 
+## the properties as follows:
+## %1$s - the Application name
+resources.appian.ap.application.appian.ap.appname=Appian 7 Local
+## %2$s - the version number
+#resources.appian.ap.application.appian.ap.version=
+## %3$s - the copyright year
+#resources.appian.ap.application.appian.ap.copyrightYear=
+## %4$s - the company name
+#resources.appian.ap.application.appian.ap.appianName=
+
+##################
+#### Topology ####
+##################
+# This setting is necessary for distributed installations
+# See https://docswiki.appian.com/suite/wiki/latest/Creating_a_Distributed_Environment_on_Windows
+# for more details
+engine.host.1=localhost
+#engine.host.2=
+
+############################
+#### Auto-checkpointing ####
+############################
+# For non-DEV environments this should be set to 0 (auto-checkpointing disabled)
+# https://docswiki.appian.com/suite/wiki/latest/Configuring_Application_Checkpointing
+auto.checkpoint.enable=1
+
+###############
+#### Email ####
+###############
+
+# Defaults to appian-alerts@<serverdomain>
+conf.mailhandler.ntf_sndr_addr=alerts@localhost
+conf.mailhandler.email.domain=localhost
+conf.mailhandler.mail.smtp.host=your.smtp.server.com
+#conf.mailhandler.mail.smtp.auth=false
+#conf.mailhandler.mail.user=
+#conf.password.SMTP=
+#conf.mailhandler.mail.smtp.starttls.enable=false
+#conf.mailhandler.mail.smtp.starttls.required=false
+
+## Rendering Email Body
+## The following properties tell the application server where to call in order
+## to render the email body before sending.  Define these if the application 
+## server cannot connect to the URL defined by 
+## conf.suite.SCHEME://conf.suite.SERVER_AND_PORT/conf.suite.APPLICATION_CONTEXT
+conf.suite.MAIL_SCHEME=http
+#conf.suite.MAIL_APPLICATION_CONTEXT=<defaults to conf.suite.APPLICATION_CONTEXT>
+conf.suite.MAIL_SERVER_AND_PORT=localhost:8080
+
+## The password for the default account configured in ejb-jar.xml used to receive email.  
+## If additional accounts are configured in ejb-jar.xml, copy the below configuration but 
+## change "EmailHandlerBean" to match the ejbName property set in ejb-jar.xml.
+#conf.password.EmailHandlerBean.EMAIL_HANDLER=@conf.password.EmailHandlerBean.EMAIL_HANDLER@
+
+####################
+#### SharePoint ####
+####################
+#conf.password.SHAREPOINT=
+
+##########################
+#### Anonymous Access ####
+##########################
+
+## DEPRECATED: Anonymous Access configurations are deprecated and will be 
+## removed in a future release. This needs to be set to true if you want to
+## receive emails into process.
+#conf.suite.ANONYMOUS_ACCESS=false
+
+## If the JMS provider requires a username and password for connection, define
+## the username here and the password in passwords.properties
+#conf.jms.createConnectionUsername=
+#conf.password.JMS=
+
+###########################
+#### Process Execution ####
+###########################
+
+## The limit to the number of rows returned in the Database Access node
+resources.appian.process.application.arv.limit=1000
+
+## Archiving
+## These two properties control what is displayed in the interface as the
+## defaults when configuring auto archiving for process models.
+conf.suite.AUTO_ARCHIVE_DELAY=7
+conf.suite.AUTO_DELETE_DELAY=0
+## The default amount of time before a completed/canceled process will auto
+## archived if not configured otherwise
+server.conf.exec.AUTOARCHIVE_DELAY=7
+## Whether or not automatic archiving of completed and canceled processes is 
+## enabled.  1=enabled; 0=disabled
+server.conf.exec.AUTOARCHIVE=1
+
+## Node Limits
+server.conf.processcommon.MAX_SPAWN_INSTANCES=100
+server.conf.processcommon.MAX_NODE_INSTANCES=1000
+
+## Raise the Cap on Maximum Engine Size on 64-Bit Operating Systems
+## https://forum.appian.com/suite/wiki/latest/Post-Install_Configurations
+## https://forum.appian.com/suite/wiki/latest/Configuring_the_Process_Engine_Servers#MAX_EXEC_ENGINE_LOAD_METRIC
+server.conf.processcommon.MAX_EXEC_ENGINE_LOAD_METRIC=120
+
+##################
+#### Analytics ###
+##################
+
+## Maximum number of rows that will be included when a report is exported or 
+## printed.
+#resources.appian.analytics.application.maxexportrows=5000
+
+###########################
+#### Collaboration     ####
+###########################
+
+## The number of megabytes to allocate to new users' quota for documents
+## uploaded to folders in Personal and Teams knowledge centers.
+#server.conf.collboration.DEFAULTSPACE=250
+
+######################
+#### Data Sources ####
+######################
+## Comma-separated list of JNDI contexts to be scanned for pre-defined 
+## datasources on the application server
+conf.data.primary.datasource=jdbc/AppianPrimaryDS
+conf.data.datasources=jdbc/AppianBusinessDS
+
+## The following properties are for the provided MySQL example appian-ds.xml file.  
+## If using Oracle, Mysql, or DB2, please refer to the Configuring Relational Databases 
+## documentation for how to create your database-specific appian-ds.xml file and 
+## for which properties to add to this file.
+## https://forum.appian.com/suite/wiki/latest/Configuring_Relational_Databases
+
+conf.data.primary.jndiname=jdbc/AppianPrimaryDS
+conf.data.primary.pool-name=MySqlDS
+conf.data.primary.class=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+conf.data.primary.security.domain=ds-name-security-primary
+conf.data.primary.security.username=appian
+conf.data.primary.security.passwordhash=-2476098864ed6021
+conf.data.primary.driver=com.mysql.jdbc
+conf.data.primary.host=localhost
+conf.data.primary.port=3306
+conf.data.primary.database=appian_primary
+
+conf.data.secondary.1.jndiname=jdbc/AppianBusinessDS
+conf.data.secondary.1.pool-name=MySqlDS
+conf.data.secondary.1.class=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+conf.data.secondary.1.security.domain=ds-name-security-business
+conf.data.secondary.1.security.username=appian
+conf.data.secondary.1.security.passwordhash=-2476098864ed6021
+conf.data.secondary.1.driver=com.mysql.jdbc
+conf.data.secondary.1.host=localhost
+conf.data.secondary.1.port=3306
+conf.data.secondary.1.database=appian_businessdata
+
+# Ignore the sections below if using external authentication provider
+#############################
+#### Identity Management ####
+#############################
+
+## The maximum length of a user's last name
+#resources.appian.ag.constants.ag.ln.maxsize=35
+## The maximum length of a user's middle name
+#resources.appian.ag.constants.ag.mn.maxsize=35
+## The maximum length of a user's first name
+#resources.appian.ag.constants.ag.fn.maxsize=35
+
+##########################################################
+#### Web Services: Exposing Processes as Web Services ####
+##########################################################
+
+#resources.appian.webservices.application.webservice.baseurl=
+
+###########################
+#### Web Services Node ####
+###########################
+
+#conf.node.webservice.max.total.connections=100
+#conf.node.webservice.max.host.connections=100
+#conf.node.webservice.connection.timeout=60
+#conf.node.webservice.socket.timeout=60
+#conf.node.webservice.max.redirects=4
+
+
+######################################
+#### PCI DSS: Password Management ####
+######################################
+
+#conf.security.pw.MIN_PASSWORD_LENGTH=1
+#conf.security.pw.MIN_NUMERIC_CHARACTERS=0
+#conf.security.pw.MIN_ALPHABETIC_CHARACTERS=0
+#conf.security.pw.MIN_SPECIAL_CHARACTERS=0
+#conf.security.pw.NUMBER_PAST_PASSWORDS_TO_CHECK=1
+
+#conf.security.pw.MAX_PASSWORD_AGE=0
+#conf.security.pw.WARN_PASSWORD_PERIOD=0 
+#conf.security.pw.MAX_TEMPORARY_PASSWORD_AGE=10080
+
+########################################
+#### PCI DSS: Failed login attempts ####
+########################################
+
+#conf.security.pw.NUMBER_FAILED_ATTEMPTS_BEFORE_LOCKING=0
+#conf.security.pw.LOCKOUT_DURATION=30
+#conf.security.pw.RESET_FAILED_LOGIN_ATTEMPTS_COUNT_AFTER=30
+
+######################################################
+#### PCI DSS: Disable inactive/idle user accounts ####
+######################################################
+
+#conf.security.account.DEACTIVATE_AFTER_INACTIVITY=0
+
+#################################################
+#### Email Templates for Temporary Passwords ####
+#################################################
+
+#conf.security.pw.RESET_PASSWORD_JSP=/ntf/emailHtml/resetPassword_emailHtml.jsp
+#conf.security.pw.CREATE_USER_PASSWORD_JSP=/ntf/emailHtml/createUserPassword_emailHtml.jsp

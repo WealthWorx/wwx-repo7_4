@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Metadata DTD.
+
+<!DOCTYPE metadata PUBLIC 
+  "-//Appian Corporation//DTD Metadata Configuration 1.0//EN" 
+  "metadata-config_1_0.dtd">
+	
+-->
+
+<!ELEMENT class EMPTY >
+<!ATTLIST class name NMTOKEN #REQUIRED >
+
+<!ELEMENT constraint EMPTY >
+<!ATTLIST constraint constant ( true | false) #REQUIRED >
+<!ATTLIST constraint null ( true | false) #REQUIRED >
+
+<!ELEMENT contains EMPTY >
+<!ATTLIST contains name NMTOKEN #REQUIRED >
+<!ATTLIST contains type ( int | string ) #REQUIRED >
+
+<!ELEMENT inherits EMPTY >
+<!ATTLIST inherits type NMTOKEN #REQUIRED >
+
+<!ELEMENT metadata ( structure+ ) >
+
+<!ELEMENT server EMPTY >
+<!ATTLIST server host CDATA #REQUIRED >
+<!ATTLIST server port NMTOKEN #REQUIRED >
+
+<!ELEMENT structure ( class | constraint | contains | inherits | server )* >
+<!ATTLIST structure type NMTOKEN #REQUIRED >
