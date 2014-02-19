@@ -377,11 +377,11 @@ server.conf.processcommon.MAX_EXEC_ENGINE_LOAD_METRIC=120
 ## Set the value to the JNDI name of the datasource that will be used as the 
 ## primary datasource.  Note: this datasource should point to a separate 
 ## tablespace than any listed in the conf.data.datasources configuration.
-conf.data.primary.datasource= java\:jdbc/WWXPrimary_SQLServer2008_Local
+conf.data.primary.datasource= java:/jdbc/WWXPrimary_SQLServer
 ## Comma-separated list of JNDI names of datasources on the application server
 ## that will be used to store business data.  This list is used by the Query
 ## Database smart service and Data Stores.
-conf.data.datasources=java\:jdbc/ODR_SQLServer2008_Local,java\:jdbc/WWXRepo_SQLServer2008_Local
+conf.data.datasources=java:/jdbc/ODR_SQLServer,java:/jdbc/WWXRepo_SQLServer
 
 ## The following properties are for the provided MySQL example appian-ds.xml file.  
 ## If using Oracle, Mysql, or DB2, please refer to the Configuring Relational Databases 
@@ -389,27 +389,37 @@ conf.data.datasources=java\:jdbc/ODR_SQLServer2008_Local,java\:jdbc/WWXRepo_SQLS
 ## for which properties to add to this file.
 ## https://forum.appian.com/suite/wiki/latest/Configuring_Relational_Databases
 
-conf.data.primary.jndiname=jdbc/AppianPrimaryDS
-conf.data.primary.pool-name=MySqlDS
-conf.data.primary.class=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+conf.data.primary.jndiname=jdbc/WWXPrimary_SQLServer
+conf.data.primary.pool-name=WWXPrimarySQLServer
+conf.data.primary.class=com.microsoft.sqlserver.jdbc.SQLServerXADataSource
 conf.data.primary.security.domain=ds-name-security-primary
-conf.data.primary.security.username=appian
-conf.data.primary.security.passwordhash=-2476098864ed6021
-conf.data.primary.driver=com.mysql.jdbc
-conf.data.primary.host=localhost
+conf.data.primary.security.username=sa
+conf.data.primary.security.passwordhash=5dfc52b51bd35553191807e488d93efe
+conf.data.primary.driver=com.mysql.com.microsoft.sqlserver.jdbc
+conf.data.primary.host=localhost\SQLExpress
 conf.data.primary.port=3306
-conf.data.primary.database=appian_primary
+conf.data.primary.database=WWXDemo7_4
 
-conf.data.secondary.1.jndiname=jdbc/AppianBusinessDS
-conf.data.secondary.1.pool-name=MySqlDS
-conf.data.secondary.1.class=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
-conf.data.secondary.1.security.domain=ds-name-security-business
-conf.data.secondary.1.security.username=appian
-conf.data.secondary.1.security.passwordhash=-2476098864ed6021
-conf.data.secondary.1.driver=com.mysql.jdbc
-conf.data.secondary.1.host=localhost
+conf.data.secondary.1.jndiname=jdbc/ODR_SQLServer
+conf.data.secondary.1.pool-name=ODR_SQLServer
+conf.data.secondary.1.class=com.microsoft.sqlserver.jdbc.SQLServerXADataSource
+conf.data.secondary.1.security.domain=ds-name-security-odr
+conf.data.secondary.1.security.username=sa
+conf.data.secondary.1.security.passwordhash=5dfc52b51bd35553191807e488d93efe
+conf.data.secondary.1.driver=com.mysql.com.microsoft.sqlserver.jdbc
+conf.data.secondary.1.host=localhost\SQLExpress
 conf.data.secondary.1.port=3306
-conf.data.secondary.1.database=appian_businessdata
+conf.data.secondary.1.database=ODRDev
+conf.data.secondary.2.jndiname=jdbc/WWXRepo_SQLServer
+conf.data.secondary.2.pool-name=ODR_SQLServer
+conf.data.secondary.2.class=com.microsoft.sqlserver.jdbc.SQLServerXADataSource
+conf.data.secondary.2.security.domain=ds-name-security-repo
+conf.data.secondary.2.security.username=sa
+conf.data.secondary.2.security.passwordhash=5dfc52b51bd35553191807e488d93efe
+conf.data.secondary.2.driver=com.mysql.com.microsoft.sqlserver.jdbc
+conf.data.secondary.2.host=localhost\SQLExpress
+conf.data.secondary.2.port=3306
+conf.data.secondary.2.database=WWXRepo
 
 ## The maximum length for SQL names (tables, columns, sequences, etc.) supported
 ## by the RDBMS in which the data source resides. The value is used when names

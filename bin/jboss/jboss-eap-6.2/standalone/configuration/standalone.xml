@@ -309,6 +309,14 @@
                         </login-module>
                     </authentication>
                 </security-domain>        
+				<security-domain name="@conf.data.secondary.2.security.domain@" cache-type="default">
+                    <authentication>
+                        <login-module code="org.picketbox.datasource.security.SecureIdentityLoginModule" flag="required">
+                            <module-option name="username" value="@conf.data.secondary.2.security.username@" />
+                            <module-option name="password" value="@conf.data.secondary.2.security.passwordhash@" />
+                        </login-module>
+                    </authentication>
+                </security-domain>        
             </security-domains>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:threads:1.1"/>

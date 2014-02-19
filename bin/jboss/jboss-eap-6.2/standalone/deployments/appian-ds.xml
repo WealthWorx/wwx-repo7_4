@@ -26,7 +26,7 @@
       <idle-timeout-minutes>5</idle-timeout-minutes>
     </timeout>
   </xa-datasource>
-  <!-- Process Data Datasource -->
+  <!-- ODR Datasource -->
   <xa-datasource 
       jndi-name="@conf.data.secondary.1.jndiname@" 
       pool-name="@conf.data.secondary.1.pool-name@"
@@ -41,6 +41,32 @@
     <driver>@conf.data.secondary.1.driver@</driver>
     <security>
       <security-domain>@conf.data.secondary.1.security.domain@</security-domain>
+    </security>
+    <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+    <xa-pool>
+      <min-pool-size>5</min-pool-size>
+      <max-pool-size>100</max-pool-size>
+    </xa-pool>
+    <timeout>
+      <blocking-timeout-millis>5000</blocking-timeout-millis>
+      <idle-timeout-minutes>5</idle-timeout-minutes>
+    </timeout>
+  </xa-datasource>
+    <!-- WWX Repository Datasource -->
+  <xa-datasource 
+      jndi-name="@conf.data.secondary.2.jndiname@" 
+      pool-name="@conf.data.secondary.2.pool-name@"
+      enabled="true" 
+      use-java-context="false">
+    <xa-datasource-property name="serverName">@conf.data.secondary.2.host@</xa-datasource-property>
+    <xa-datasource-property name="portNumber">@conf.data.secondary.2.port@</xa-datasource-property>
+    <xa-datasource-property name="databaseName">@conf.data.secondary.2.database@</xa-datasource-property>
+    <xa-datasource-property name="useUnicode">true</xa-datasource-property>
+    <xa-datasource-property name="characterEncoding">UTF-8</xa-datasource-property>
+    <xa-datasource-class>@conf.data.secondary.2.class@</xa-datasource-class>
+    <driver>@conf.data.secondary.2.driver@</driver>
+    <security>
+      <security-domain>@conf.data.secondary.2.security.domain@</security-domain>
     </security>
     <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
     <xa-pool>
