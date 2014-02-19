@@ -1,0 +1,571 @@
+################################################################################
+# build properties #############################################################
+################################################################################
+
+appian.home=C\:/appian
+# UNC path to the Appian data storage location (collab docs, models, notes etc.). 
+# Make this appian.home/_admin for non-distributed installations.
+appian.data.home=c\:/appian/_admin
+
+## installation specific parameters
+installer.source.dir=${basic.basedir}/installers
+#example: installer.source.dir=C:/Downloads/installers
+installer.source.file=
+#example: installer.source.file=setupWin_appian-6.5.1.0.exe
+k.lic.file.location=
+#example: k.lic.file.location=C:/Downloads/installers/k3.lic
+installer.password=
+#installer.password=<appian password>
+
+app.dir=
+#example: app.dir=C:/repository/Process_Application
+app.names=
+#example: app.names=Acquisition_Application.zip,Administrative_Application.zip
+admin.id=Administrator
+admin.password=admin
+hotfix.dir=${installer.source.dir}
+hotfix.file.list=7_4_0_0_Hotfix_Package_A.zip
+#example: hotfix.file.list=6_6_0_0_Hotfix_1.zip,6_6_0_0_Hotfix_2.zip,6_6_0_0_Hotfix_3.zip
+
+## uncomment the line below if you want to build plugins
+## to stop building the plugins, comment this line out
+#buildPlugins=build
+
+## used to determine which app server is being used.
+appserver.name=jboss
+
+############################################################################
+# JBoss configuration ######################################################
+############################################################################
+# Relevant only if using JBoss app server
+
+# Configure the JBoss installation path
+appserver.jboss.install=${appian.home}/bin/jboss
+appserver.home=${appserver.jboss.install}/jboss-eap-6.2
+appserver.jboss.bin=${appserver.home}/bin
+appserver.jboss.bin.run.conf.bat=standalone.conf.bat
+appserver.jboss.bin.run.conf=standalone.conf
+project.jboss=${basic.basedir}/bin/jboss/jboss-eap-6.2
+appserver.lib=${appserver.home}/modules
+appserver.cache=${appserver.home}/standalone/tmp/work/
+
+# Configure JBoss source directory and file
+jboss.installer.source.dir=${installer.source.dir}
+jboss.installer.source.file=jboss-eap-6.2.0.zip
+jboss.management.user.username=
+jboss.management.user.password=
+
+################################################################################
+# application specific #########################################################
+################################################################################
+
+project.name=WealthWorx
+ae.version=7.4
+project.version.major=1
+project.version.minor=0
+
+
+################################################################################
+# webserver configuration ######################################################
+################################################################################
+
+## Web Server Static Directory
+#appian.static=c\:/appian-static
+#webserver.home=c:\/Program Files/Apache Group/Apache2
+## used to determine which web server is being used.
+#webserver.name=apache
+
+#################
+#### General ####
+#################
+
+conf.suite.SCHEME=http
+#conf.suite.PRIVATE_SCHEME=http
+## If the PRIVATE_SCHEME is set to https (a rare configuration), the following 
+## 3 properties must be set to the values appropriate to the ssl protocol and 
+## keystore information.  sslProtocol should be one of the value listed in 
+## http://java.sun.com/javase/6/docs/technotes/guides/security/StandardNames.html#SSLContext
+#conf.suite.sslProtocol=
+#conf.suite.keystoreFile=
+#conf.suite.keystorePass=
+## Used by both App Server and Engines to build up base URLs for links
+#conf.suite.APPLICATION_CONTEXT=
+
+# This is the URL that end users will be accessing the system from. It will be used for 
+# all links back into the system, for example in emails.
+# If using a web server like Apache HTTP, port :80 is implicit, so no need to specify it
+conf.suite.SERVER_AND_PORT=jbovatsek-pc:8080
+
+#This setting allows for a dropdown in the top right corner of the Tempo interface 
+#with links to published applications within the /apps interface.
+conf.navigation.SHOW_APPLICATIONS_MENU=true
+
+## The minutes of inactivity before the session timeout warning dialog appears
+resources.appian.ap.application.appian.ap.session.timeoutwarn=60
+
+## The BASE_PATH is the path to the directory that contains the accdocs*
+## directories referenced in server/_conf/partition.xml
+#conf.suite.BASE_PATH=
+
+## The DEFAULT_ENVIRONMENT is the user environment to which the user will be 
+## redirected when the environment is not specified in the URL.  Valid options 
+#are 'designer' or 'apps' (without quotes).
+conf.suite.DEFAULT_ENVIRONMENT=designer
+
+## ID of the default home page that users see in the designer environment if 
+## they do not have a custom home page
+#conf.suite.DEFAULT_HOME_PAGE_ID=0
+
+## Copyright statements can be overridden using the following properties.  The
+## The 4 substitution parameters can be individually overriden with the 
+## the properties as follows:
+## %1$s - the Application name
+resources.appian.ap.application.appian.ap.appname=WealthWorx
+## %2$s - the version number
+resources.appian.ap.application.appian.ap.version=7.4
+## %3$s - the copyright year
+resources.appian.ap.application.appian.ap.copyrightYear=
+## %4$s - the company name
+resources.appian.ap.application.appian.ap.appianName=Oakbrook Solutions, Inc.
+
+##Setting to show the Appian logo in the top-right corner of the Tempo application
+conf.branding.SHOW_APPIAN_LOGO=false
+##Setting to provide the path for a Login Logo, if different from the standard Application Logo
+conf.suite.LOGIN_LOGO_PATH=/framework/img/logo_apps.gif
+
+## Autocomplete
+conf.suite.AUTOCOMPLETE_ENABLED=true
+## Maximum number of suggestions to return with an autocomplete query
+conf.suite.MAX_AUTOCOMPLETE_SUGGESTIONS=12
+## Maximum number of items to cache for autocomplete
+conf.suite.CACHE_MAX_SIZE=1000
+
+## Performance Monitoring
+## The comma-delimited list of metrics to output in the performance monitoring 
+## logs. Set this to blank to enable all performance monitoring metrics in
+## the perf_monitor_logs.
+# server.conf.a.PERF_MONITOR_HEADER=idle,fg,bg,workq_finished,availableWorkQueue,events_received,consumers_received,ProcessMessageConsumers
+
+## The namespace for custom data types created using the data type designer.
+## The value must be a URI. When the value of this property is changed, only
+## new data types created in the data type designer get the new namespace value.
+## The default value for this property is determined by the SERVER_AND_PORT and
+## related properties.
+#conf.data.type.designer.namespace=SCHEME://SERVER_AND_PORT/APPLICATION_CONTEXT/types/
+
+##################
+#### Topology ####
+##################
+# This setting is necessary for distributed installations
+# See https://docswiki.appian.com/suite/wiki/latest/Creating_a_Distributed_Environment_on_Windows
+# for more details
+engine.host.1=localhost
+#engine.host.2=
+
+############################
+#### Auto-checkpointing ####
+############################
+# For non-DEV environments this should be set to 0 (auto-checkpointing disabled)
+# https://docswiki.appian.com/suite/wiki/latest/Configuring_Application_Checkpointing
+auto.checkpoint.enable=0
+
+###############
+#### Email ####
+###############
+
+# Defaults to appian-alerts@<serverdomain>
+conf.mailhandler.ntf_sndr_addr=wwxdemo@obwealthworx.com
+conf.mailhandler.email.domain=obwealthworx.com
+conf.mailhandler.mail.smtp.host=216.9.70.66
+conf.mailhandler.mail.smtp.auth=false
+conf.mailhandler.mail.user=
+conf.password.SMTP=
+#conf.mailhandler.mail.smtp.starttls.enable=false
+#conf.mailhandler.mail.smtp.starttls.required=false
+
+## Rendering Email Body
+## The following properties tell the application server where to call in order
+## to render the email body before sending.  Define these if the application 
+## server cannot connect to the URL defined by 
+## conf.suite.SCHEME://conf.suite.SERVER_AND_PORT/conf.suite.APPLICATION_CONTEXT
+conf.suite.MAIL_SCHEME=http
+#conf.suite.MAIL_APPLICATION_CONTEXT=<defaults to conf.suite.APPLICATION_CONTEXT>
+conf.suite.MAIL_SERVER_AND_PORT=localhost:8080
+
+## The password for the default account configured in ejb-jar.xml used to receive email.  
+## If additional accounts are configured in ejb-jar.xml, copy the below configuration but 
+## change "EmailHandlerBean" to match the ejbName property set in ejb-jar.xml.
+#conf.password.EmailHandlerBean.EMAIL_HANDLER=@conf.password.EmailHandlerBean.EMAIL_HANDLER@
+
+####################
+#### SharePoint ####
+####################
+#conf.password.SHAREPOINT=
+
+##########################
+#### Anonymous Access ####
+##########################
+
+## DEPRECATED: Anonymous Access configurations are deprecated and will be 
+## removed in a future release. 
+conf.suite.ANONYMOUS_ACCESS=true
+conf.suite.ANONYMOUS_ACTION_PATHS=/portal,/portlets,/portal/sendfeedback,/portal/pagesearch,/portal/cachegroups,/logout,/news,/tabbar,/portlet,/portletarea,/portal/navcontrol,/portal/category,/userdetail_pop,/nogrouppage,/personalization/handlelistfromwhitepages,/personalization/sortwhitepagesresults,/components/display/render,/components/hierarchy/renderDynamic,/components/hierarchy/renderStatic,/components/hierarchy/targets/groupPage,/collaboration/GetDocument,/collaboration/downloadDocumentExternal,/calendar/pcontrol,/portal/setuserenvironment,/portal/setcurrnavitem,/process/execute_unattended,/portal/navigation/setcurrentitem,/personalization/grouppage,/p_mini/viewMiniContent,/personalization/finduserresults,/personalization/userdetail,/components/grid/controller,/personalization/prepfinduser
+conf.suite.ANONYMOUS_SERVLET_PATHS=/doc,/page
+
+##############################
+#### Notifiations Settigs ####
+##############################
+## Override default notifications settings to not send any emails.
+
+server.conf.notifications.threads_new_msg_timing=never
+server.conf.notifications.threads_invite_msg_timing=never
+server.conf.notifications.threads_accept_invite_msg_timing=never
+server.conf.notifications.threads_decline_invite_msg_timing=never
+server.conf.notifications.send_thread_msg_timing=never
+server.conf.notifications.group_membership_requested_timing=never
+server.conf.notifications.group_invitation_timing=never
+server.conf.notifications.group_membership_removed_timing=never
+server.conf.notifications.group_membership_request_approved_timing=never
+server.conf.notifications.group_membership_request_rejected_timing=never
+server.conf.notifications.group_invitation_accepted_timing=never
+server.conf.notifications.group_invitation_declined_timing=never
+server.conf.notifications.send_link_msg_timing=never
+server.conf.notifications.send_feedback_msg_timing=never
+server.conf.notifications.page_approved_msg_timing=never
+server.conf.notifications.system_msg_timing=never
+server.conf.notifications.page_approval_req_msg_timing=never
+server.conf.notifications.collab_send_link_msg_timing=never
+server.conf.notifications.collab_access_approved_msg_timing=never
+server.conf.notifications.collab_access_rejected_msg_timing=never
+server.conf.notifications.collab_access_request_msg_timing=never
+server.conf.notifications.collab_approved_changes_msg_timing=never
+server.conf.notifications.collab_rejected_changes_msg_timing=never
+server.conf.notifications.collab_change_request_msg_timing=never
+server.conf.notifications.collab_expiring_files_msg_timing=never
+server.conf.notifications.collab_invite_kc_msg_timing=never
+server.conf.notifications.collab_accept_invite_msg_timing=never
+server.conf.notifications.collab_decline_invite_msg_timing=never
+server.conf.notifications.process_escalation_msg_timing=never
+server.conf.notifications.process_sub_link_republished_timing=never
+server.conf.notifications.process_super_process_causes_publishing_timing=never
+server.conf.notifications.process_sub_link_disabled_deleted=never
+server.conf.notifications.process_new_task_me_timing=never
+server.conf.notifications.process_new_task_others_timing=never
+server.conf.notifications.process_cannot_delete_cancel_sub=never
+server.conf.notifications.process_exception_msg_timing=never
+server.conf.notifications.task_exception_msg_timing=never
+
+
+
+########################
+#### Single Sign-On ####
+########################
+
+#conf.suite.SSO_ENABLED=false
+#conf.suite.SSO_TYPE=header
+#conf.suite.SSO_KEY=SM_USER
+## DEPRECATED: SSO_HEADER is deprecated, use SSO_KEY
+#conf.suite.SSO_HEADER=SM_USER
+
+######################
+#### Data Capping ####
+######################
+
+## Data Capping Constants, value in characters. DATA_CAP_ARRAY in indices
+## The maximum limits are:
+##  DATA_CAP_WORDS=500, DATA_CAP_SENTENCES=1250, DATA_CAP_PARAGRAPHS=12500
+##  DATA_CAP_ARRAY=1250, DATA_CAP_FORM_LABEL=5000, 
+##  DATA_CAP_FORM_INSTRUCTIONS=5000
+conf.suite.DATA_CAP_WORDS=500
+conf.suite.DATA_CAP_SENTENCES=1000
+conf.suite.DATA_CAP_PARAGRAPHS=5000
+conf.suite.DATA_CAP_ARRAY=1000
+conf.suite.DATA_CAP_FORM_LABEL=1000
+conf.suite.DATA_CAP_FORM_INSTRUCTIONS=1000
+
+## The maximum limit for DATA_TRUNC_SENTENCES is 1250
+conf.suite.DATA_TRUNC_SENTENCES=1000
+
+## Notification data caps
+conf.suite.ALERT_SUBJECT_LIMIT=150
+conf.suite.ALERT_MESSAGE_LIMIT=1000
+
+## If the JMS provider requires a username and password for connection, define
+## the username here and the password in passwords.properties
+#conf.jms.createConnectionUsername=
+#conf.password.JMS=
+
+###########################
+#### Process Execution ####
+###########################
+
+## Activity Chaining
+#conf.suite.REQUEST_TIMEOUT_IN_SEC=
+
+## The limit to the number of rows returned in the Database Access node
+resources.appian.process.application.arv.limit=5000
+
+## Archiving
+## These two properties control what is displayed in the interface as the
+## defaults when configuring auto archiving for process models.
+conf.suite.AUTO_ARCHIVE_DELAY=999
+conf.suite.AUTO_DELETE_DELAY=0
+## The default amount of time before a completed/canceled process will auto
+## archived if not configured otherwise
+server.conf.exec.AUTOARCHIVE_DELAY=999
+## Whether or not automatic archiving of completed and canceled processes is 
+## enabled.  1=enabled; 0=disabled
+server.conf.exec.AUTOARCHIVE=0
+
+## Node Limits
+server.conf.processcommon.MAX_SPAWN_INSTANCES=1000
+server.conf.processcommon.MAX_NODE_INSTANCES=10000
+
+## Process Execution Load Metric - set to 30 times memory in GB greater than 4 GB
+## For example - for 12GB memory set to 30*(12-4) = 240
+server.conf.processcommon.MAX_EXEC_ENGINE_LOAD_METRIC=120
+
+##################
+#### Analytics ###
+##################
+
+## Analytics Report Rows Cap 
+## This number specifies the maximum number of items that can be loaded into 
+## app server memory when processing a report. 
+## It determines the last page that can be retrieved for a report: 
+## last page = floor(maxreportrows/(number of analytics engines * number of rows per page))
+## In addition, this also determines the maximum number of rows that will be 
+## included when a report is exported or printed.
+#resources.appian.analytics.application.maxreportrows=30000
+
+## Analytics Engine Timeout
+## How much time each analytics engine is allowed to take to process a request in 
+## milliseconds. The report will time out if the request takes longer to process.
+#server.conf.processcommon.MAXIMUM_REPORT_MS=2000
+
+## Analytics Sub-Process Depth
+## When a report is configured to include data from sub-processes, analytics 
+## will only look at this number of sub-process levels deep.
+#resources.appian.analytics.application.MAX_SUB_DEPTH=10
+
+## Process Search: report used to display results of process searches
+## the value must be an alias defined in analytics-config(-*).xml
+#resources.appian.process.application.appian.process.process_search_report=all_processes
+
+###########################
+#### Collaboration ####
+###########################
+## The minimum allowed size for a document or a folder.
+#resources.appian.ac.MINIMUM_DOCUMENT_NAME_LENGTH=4
+## The maximum allowed size in bytes for a document
+#resources.appian.ac.MAX_UPLOAD_FILE_SIZE=1024000000
+## The group id of Collaboration Administrators
+#resources.appian.ac.collaboration.COLLABORATION_ADMINISTRATION_GROUP_ID=0
+## The number of Documents, Knowledge Center, or Folders that can be moved 
+## simultaneously
+#resources.appian.ac.collaboration.MAX_NUMBER_MOVEABLE_OBJECTS=4
+## Then number of megabytes to allocate to new users' quota for documents
+## uploaded to folders in Personal and Teams knowledge centers.  Changing the
+## value does not affect existing users.
+#server.conf.collaboration.DEFAULTSPACE=250
+
+######################
+#### Data Sources ####
+######################
+## The primary data source is used to store the data type metadata.  It must be 
+## configured to take advantage of the new data features released in Appian 6.1.
+## Set the value to the JNDI name of the datasource that will be used as the 
+## primary datasource.  Note: this datasource should point to a separate 
+## tablespace than any listed in the conf.data.datasources configuration.
+conf.data.primary.datasource= java\:jdbc/WWXPrimary_SQLServer2008_Local
+## Comma-separated list of JNDI names of datasources on the application server
+## that will be used to store business data.  This list is used by the Query
+## Database smart service and Data Stores.
+conf.data.datasources=java\:jdbc/ODR_SQLServer2008_Local,java\:jdbc/WWXRepo_SQLServer2008_Local
+
+## The following properties are for the provided MySQL example appian-ds.xml file.  
+## If using Oracle, Mysql, or DB2, please refer to the Configuring Relational Databases 
+## documentation for how to create your database-specific appian-ds.xml file and 
+## for which properties to add to this file.
+## https://forum.appian.com/suite/wiki/latest/Configuring_Relational_Databases
+
+conf.data.primary.jndiname=jdbc/AppianPrimaryDS
+conf.data.primary.pool-name=MySqlDS
+conf.data.primary.class=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+conf.data.primary.security.domain=ds-name-security-primary
+conf.data.primary.security.username=appian
+conf.data.primary.security.passwordhash=-2476098864ed6021
+conf.data.primary.driver=com.mysql.jdbc
+conf.data.primary.host=localhost
+conf.data.primary.port=3306
+conf.data.primary.database=appian_primary
+
+conf.data.secondary.1.jndiname=jdbc/AppianBusinessDS
+conf.data.secondary.1.pool-name=MySqlDS
+conf.data.secondary.1.class=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+conf.data.secondary.1.security.domain=ds-name-security-business
+conf.data.secondary.1.security.username=appian
+conf.data.secondary.1.security.passwordhash=-2476098864ed6021
+conf.data.secondary.1.driver=com.mysql.jdbc
+conf.data.secondary.1.host=localhost
+conf.data.secondary.1.port=3306
+conf.data.secondary.1.database=appian_businessdata
+
+## The maximum length for SQL names (tables, columns, sequences, etc.) supported
+## by the RDBMS in which the data source resides. The value is used when names
+## defined by JPA annotations and/or XSD name attributes are used to map to
+## tables, columns, etc. via data store entities. This is a global setting
+## applied to all data sources. Set the value to the lowest common denominator
+## when integrating with several RDBMS platforms. The default is set to Oracle's
+## limit. Note: The effective max length is 3 characters less than the given 
+## value as 3 characters are reserved for system use.
+conf.data.sql.name.maxlength=35
+
+
+#####################
+#### Query Rules ####
+#####################
+## The amount of memory in bytes that will be consumed in the application server 
+## for a single query before the query is halted. Default is 1 MB.
+#conf.data.query.memory.limit=1048576
+## The amount of time in seconds that a query will wait for a response from the
+## database before timing out.
+#conf.data.query.timeout=10
+
+#############################
+#### Identity Management ####
+#############################
+
+## The maximum length of a user's last name
+#resources.appian.ag.constants.ag.ln.maxsize=35
+## The maximum length of a user's middle name
+#resources.appian.ag.constants.ag.mn.maxsize=35
+## The maximum length of a user's first name
+#resources.appian.ag.constants.ag.fn.maxsize=35
+
+## User Visibilty
+## The default behavior when the Viewers role in a user's role map is empty. 
+## Valid values: viewer-details; none.
+## When set to 'viewer-details', all users will be able to see the profile  
+## details of a user if that user's role map has no Viewers configured.
+## If set to 'none', no users will see that user's details unless they are
+## explicitly added in the Viewers role of that user. Regardless of the value
+## given for this property, if the Viewers role is non-empty, only those users
+## set in the Viewers role will be able to see that user's profile details.
+#conf.security.user.DEFAULT_VISIBILITY=viewer-details
+
+#############
+#### JMS ####
+#############
+## A list of client ids to use when connecting to the JMS provider, either
+## clientIds needs to be defined as a comma-separated list or both 
+## clientIdPrefix and maxConnections must be defined
+#conf.jms.clientIds=
+#conf.jms.clientIdPrefix=CLIENT_
+#conf.jms.maxConnections=20
+## The name of the JMS topic or queue that contains messages destined for 
+## process
+#conf.jms.processTopic=Process
+## Some JMS providers have a prefix before the topic of queue name, if needed
+## define that prefix here
+#conf.jms.topicPrefix=
+#conf.jms.queuePrefix=
+## If the JMS provider requires a username and password for connection, define
+## those here
+#conf.jms.createConnectionUsername=
+#conf.jms.createConnectionPassword=
+
+################
+#### Search ####
+################
+## Maximum number of terms that will be indexed in a field for search
+## If out of memory errors occur during search indexing, reduce this number
+#conf.search.lucene.maxFieldLength=2147483647
+## Maximum number of docs allowed in a merge segment during indexing
+#conf.search.lucene.maxMergeDocs=2147483647
+## Number of merge segments to use when creating the Lucense index
+## Increasing the value speeds up indexing, but uses more memory.
+#conf.search.lucene.mergeFactor=25
+## Determine whether search results contain items for non-searchable containers
+## if the user has access.  A value of true indicates that a user with access to
+## a Knowledge Center or Folder will see its contents in search results 
+## regardless of whether the container is set as searchable.
+#conf.search.lucene.permission.ignoreSearchFlag=false
+## The directory where the global search index generation is created.  Use a 
+## forward slash (/) on all platforms.
+#server.conf.search.SEARCH_INDEX_DIR=<install_dir>/_admin/search/data
+## The number of rows to write to the global search index file at one time.  
+## Decrease this value to improve memory performance at the expense of CPU 
+## performance.  If the program receives memory full (wsfull) errors during 
+## search index generation, decrease this value.
+#server.conf.search.SEARCH_INDEX_SPLIT=5000
+
+##########################################################
+#### Web Services: Exposing Processes as Web Services ####
+##########################################################
+
+#resources.appian.webservices.application.webservice.baseurl=
+
+###########################
+#### Web Services Node ####
+###########################
+
+#conf.node.webservice.max.total.connections=100
+#conf.node.webservice.max.host.connections=100
+#conf.node.webservice.connection.timeout=60
+#conf.node.webservice.socket.timeout=60
+#conf.node.webservice.max.redirects=4
+
+
+######################################
+#### PCI DSS: Password Management ####
+######################################
+
+conf.security.pw.MIN_PASSWORD_LENGTH=1
+conf.security.pw.MIN_NUMERIC_CHARACTERS=0
+conf.security.pw.MIN_ALPHABETIC_CHARACTERS=0
+conf.security.pw.MIN_SPECIAL_CHARACTERS=0
+conf.security.pw.NUMBER_PAST_PASSWORDS_TO_CHECK=1
+
+conf.security.pw.MAX_PASSWORD_AGE=0
+conf.security.pw.WARN_PASSWORD_PERIOD=0 
+conf.security.pw.MAX_TEMPORARY_PASSWORD_AGE=10080
+
+########################################
+#### PCI DSS: Failed login attempts ####
+########################################
+
+#conf.security.pw.NUMBER_FAILED_ATTEMPTS_BEFORE_LOCKING=0
+#conf.security.pw.LOCKOUT_DURATION=30
+#conf.security.pw.RESET_FAILED_LOGIN_ATTEMPTS_COUNT_AFTER=30
+
+######################################################
+#### PCI DSS: Disable inactive/idle user accounts ####
+######################################################
+
+#conf.security.account.DEACTIVATE_AFTER_INACTIVITY=0
+
+#################################################
+#### Email Templates for Temporary Passwords ####
+#################################################
+
+#conf.security.pw.RESET_PASSWORD_JSP=/ntf/emailHtml/resetPassword_emailHtml.jsp
+#conf.security.pw.CREATE_USER_PASSWORD_JSP=/ntf/emailHtml/createUserPassword_emailHtml.jsp
+##################
+#### Plug-ins ####
+##################
+## The plug-in loading poll interval is the maximum number of seconds that will
+## pass before loading a new plug-in after it is placed in the plugins 
+## directory.  Setting the interval to 0 will cause hot deployment to be
+## disabled and deploying a new plug-in will require an app server restart.
+#conf.plugins.poll-interval=60
+
+###############
+#### Retry ####
+###############
+## Some smart services and expression functions that can be safely retried when 
+## they encounter certain transient errors. This setting determines length of
+## time (seconds) from the initial failure that the action will be retried 
+## before failing permanently.  The exponential backoff retry frequency is not 
+## configurable.  Set this configuration to 0 to disable automatic retries.
+#conf.retry.MAX_TIME_TO_LIVE=64800
