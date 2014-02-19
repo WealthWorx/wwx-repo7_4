@@ -6,11 +6,11 @@
       pool-name="@conf.data.primary.pool-name@"
       enabled="true" 
       use-java-context="false">
-    <xa-datasource-property name="serverName">@conf.data.primary.host@</xa-datasource-property>
-    <xa-datasource-property name="portNumber">@conf.data.primary.port@</xa-datasource-property>
-    <xa-datasource-property name="databaseName">@conf.data.primary.database@</xa-datasource-property>
-    <xa-datasource-property name="useUnicode">true</xa-datasource-property>
-    <xa-datasource-property name="characterEncoding">UTF-8</xa-datasource-property>
+    <xa-datasource-property name="ServerName">@conf.data.primary.host@</xa-datasource-property>
+    <xa-datasource-property name="PortNumber">@conf.data.primary.port@</xa-datasource-property>
+    <xa-datasource-property name="DatabaseName">@conf.data.primary.database@</xa-datasource-property>
+    <!-- <xa-datasource-property name="useUnicode">true</xa-datasource-property> -->
+    <!-- <xa-datasource-property name="characterEncoding">UTF-8</xa-datasource-property> -->
     <xa-datasource-class>@conf.data.primary.class@</xa-datasource-class>
     <driver>@conf.data.primary.driver@</driver>
     <security>
@@ -32,11 +32,11 @@
       pool-name="@conf.data.secondary.1.pool-name@"
       enabled="true" 
       use-java-context="false">
-    <xa-datasource-property name="serverName">@conf.data.secondary.1.host@</xa-datasource-property>
-    <xa-datasource-property name="portNumber">@conf.data.secondary.1.port@</xa-datasource-property>
-    <xa-datasource-property name="databaseName">@conf.data.secondary.1.database@</xa-datasource-property>
-    <xa-datasource-property name="useUnicode">true</xa-datasource-property>
-    <xa-datasource-property name="characterEncoding">UTF-8</xa-datasource-property>
+    <xa-datasource-property name="ServerName">@conf.data.secondary.1.host@</xa-datasource-property>
+    <xa-datasource-property name="PortNumber">@conf.data.secondary.1.port@</xa-datasource-property>
+    <xa-datasource-property name="DatabaseName">@conf.data.secondary.1.database@</xa-datasource-property>
+    <!-- <xa-datasource-property name="useUnicode">true</xa-datasource-property> -->
+    <!-- <xa-datasource-property name="characterEncoding">UTF-8</xa-datasource-property> -->
     <xa-datasource-class>@conf.data.secondary.1.class@</xa-datasource-class>
     <driver>@conf.data.secondary.1.driver@</driver>
     <security>
@@ -58,11 +58,11 @@
       pool-name="@conf.data.secondary.2.pool-name@"
       enabled="true" 
       use-java-context="false">
-    <xa-datasource-property name="serverName">@conf.data.secondary.2.host@</xa-datasource-property>
-    <xa-datasource-property name="portNumber">@conf.data.secondary.2.port@</xa-datasource-property>
-    <xa-datasource-property name="databaseName">@conf.data.secondary.2.database@</xa-datasource-property>
-    <xa-datasource-property name="useUnicode">true</xa-datasource-property>
-    <xa-datasource-property name="characterEncoding">UTF-8</xa-datasource-property>
+    <xa-datasource-property name="ServerName">@conf.data.secondary.2.host@</xa-datasource-property>
+    <xa-datasource-property name="PortNumber">@conf.data.secondary.2.port@</xa-datasource-property>
+    <xa-datasource-property name="DatabaseName">@conf.data.secondary.2.database@</xa-datasource-property>
+    <!-- <xa-datasource-property name="useUnicode">true</xa-datasource-property> -->
+    <!-- <xa-datasource-property name="characterEncoding">UTF-8</xa-datasource-property> -->
     <xa-datasource-class>@conf.data.secondary.2.class@</xa-datasource-class>
     <driver>@conf.data.secondary.2.driver@</driver>
     <security>
