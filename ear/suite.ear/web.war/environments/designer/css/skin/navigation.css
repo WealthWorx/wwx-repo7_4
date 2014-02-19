@@ -1,0 +1,88 @@
+#environmentNavigation {
+  background:#D7E6E9;
+  font-weight:bold;
+}
+
+#environmentNavigation.yui-navset .yui-nav {
+  border:0;
+}
+
+#environmentNavigation.yui-navset .yui-nav li a {
+  background:#828181 url(../../../../portal/img/designer_unselected.gif) repeat-x;
+  color:white;
+  border-left:1px solid #636363;
+  border-right:1px solid #636363;
+}
+
+#environmentNavigation.yui-navset .yui-nav li[nav="apps"] a,
+#environmentNavigation.yui-navset .yui-nav li[nav="admin"] a {
+  background:#1c96c0 url(../../../../portal/img/designer_special.gif) repeat-x;
+  border-left:1px solid #1c96c0;
+  border-right:1px solid #1c96c0;
+}
+
+#environmentNavigation.yui-navset .yui-nav li.selected a {
+  background:#E9E9E9 url(../../../../portal/img/enduser_selected.png) repeat-x;
+  color:black;
+  border-left:1px solid white;
+  border-right:1px solid white;
+}
+
+#environmentNavigation.yui-navset .yui-nav li a em {
+  border-top:1px solid #636363;
+}
+
+#environmentNavigation.yui-navset .yui-nav li[nav="apps"] a em,
+#environmentNavigation.yui-navset .yui-nav li[nav="admin"] a em {
+  border-top:1px solid #1c96c0;
+}
+
+#environmentNavigation.yui-navset .yui-nav li.selected a em {
+  border-top:1px solid white;
+}
+
+#environmentNavigation.yui-navset .yui-nav a:hover {
+  background-color:#4f4f4f;
+  background-image:none;
+}
+
+#environmentNavigation.yui-navset .yui-nav li.selected a:hover {
+  background:#E9E9E9 url(../../../../portal/img/enduser_selected.png) repeat-x;
+  border-left:1px solid white;
+  border-right:1px solid white;
+  color:black;
+}
+
+#environmentNavigation.yui-navset .yui-nav li[nav="apps"] a:hover,
+#environmentNavigation.yui-navset .yui-nav li[nav="admin"] a:hover {
+  background-color: #2B5E85;
+  background-image: none;
+  border-left:1px solid #2B5E85;
+  border-right:1px solid #2B5E85;
+}
+
+#environmentNavigation.yui-navset .yui-nav li[nav="apps"].selected a:hover,
+#environmentNavigation.yui-navset .yui-nav li[nav="admin"].selected a:hover{
+  background:#E9E9E9 url(../../../../portal/img/enduser_selected.png) repeat-x;
+  border-left:1px solid white;
+  border-right:1px solid white;
+  color:black;
+}
+
+#environmentNavigation.yui-navset .yui-nav li a:hover em {
+  border-top:1px solid #4f4f4f;
+}
+
+#environmentNavigation.yui-navset .yui-nav li[nav="apps"].selected a:hover em,
+#environmentNavigation.yui-navset .yui-nav li[nav="admin"].selected a:hover em{
+  border-top:1px solid white;
+}
+
+#environmentNavigation.yui-navset .yui-nav li.selected a:hover em {
+  border-top:1px solid white;
+}
+
+#environmentNavigation.yui-navset .yui-nav li[nav="apps"] a:hover em,
+#environmentNavigation.yui-navset .yui-nav li[nav="admin"] a:hover em {
+  border-top:1px solid #2B5E85;
+}

@@ -1,0 +1,92 @@
+#environmentHeader {
+  background-color:#fff;
+  color:#3b3b3b;
+}
+/* Blue alternate skin
+#environmentHeader {
+  background-color:#15466e;
+  color:white;
+}
+*/
+#environmentHeader .appName {
+  font-size:1.5em;
+  background: url(../../../../portal/img/skins/default/pulldown_arrow.gif) no-repeat center right;
+  cursor: pointer;
+}
+#environmentHeader .appName:hover {
+  background: url(../../../../portal/img/skins/default/pulldown_arrow_over.gif) no-repeat center right;
+}
+a#applicationNameLink{
+  color: #304867;
+}
+#environmentHeader .appName:hover a{
+  color: #F4AC00;
+}
+
+/* Blue alternate skin
+#environmentHeader .appName {
+  font-size:1.5em;
+  background: url(../../../../portal/img/skins/blue/pulldown_arrow.gif) no-repeat center right;
+  cursor: pointer;
+}
+
+#environmentHeader .appName:hover {
+  color: #F4AC00;
+  background: url(../../../../portal/img/skins/blue/pulldown_arrow_over.gif) no-repeat center right;
+}
+
+a#applicationNameLink{
+  color: white;
+}
+
+a#applicationNameLink:hover{
+  color: #F4AC00;
+}
+*/
+#environmentHeader .d1 a {
+  color:#304867;
+  background: url(../../../../portal/img/skins/default/links_sprite.gif) no-repeat top left;
+}
+/* Blue alternate skin
+#environmentHeader .d1 a {
+  color:white;
+  background: url(../../../../portal/img/skins/blue/links_sprite.gif) no-repeat top left;
+}
+*/
+#environmentHeader .d1 a:hover {
+  color:#f4ac00;
+}
+
+#environmentHeader #appsMenuToggle {
+  cursor: pointer;
+}
+
+#environmentHeader .d1 a.sprite.alerts { background-position: 0 -92px; } 
+#environmentHeader .d1 a.sprite.help { background-position: 0 -300px; } 
+#environmentHeader .d1 a.sprite.home { background-position: 0 -508px; } 
+#environmentHeader .d1 a.sprite.inbox { background-position: 0 -716px; } 
+#environmentHeader .d1 a.sprite.logout { background-position: 0 -924px; }
+#environmentHeader .d1 a.sprite.preferences { background-position: 0 -1132px; }
+
+#environmentHeader .d1 a.sprite.alerts:hover { background-position: 0 -196px; } 
+#environmentHeader .d1 a.sprite.help:hover { background-position: 0 -404px; } 
+#environmentHeader .d1 a.sprite.home:hover { background-position: 0 -612px; } 
+#environmentHeader .d1 a.sprite.inbox:hover { background-position: 0 -820px; } 
+#environmentHeader .d1 a.sprite.logout:hover { background-position: 0 -1028px; }
+#environmentHeader .d1 a.sprite.preferences:hover { background-position: 0 -1236px; }
+
+#environmentTitlebar{
+  background: #404040 url(../../../../portal/img/skins/default/portal_header_bg.gif) repeat-x top left;
+}
+
+div#inlineConfirmMessage{
+  color: #535353;
+  background-color: #FEFEB0;
+  border: 1px solid #919191;
+  cursor: pointer;
+  background-image: url('../../../../components/toolbar/img/blueinfo.gif');
+  background-repeat: no-repeat;
+  background-position: 6px 5px;
+}
+
+#environmentHeader .d1 a.headerTempoIcon { font-weight: bold; }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  To override the default topology configuration:
+  Create a file named appian-topology.xml
+
+  Below are some examples of topology files
+  that can be used.
+-->
+<!--
+  NEW DEFAULT TOPOLOGY
+  Starting from the base port, each engine takes the next two consecutive
+  ports, one for the gateway, the other one for the database.
+  In this case, forums will take 5000 for the gateway and 5001 for the db.
+  Notify will take 5002 for the gateway and 5003 for the db, and so on.
+  The gateway id are automatically inferred if not overridden.
+-->
+<topology port="5000">
+  <server host="@engine.host.1@">
+    <engine name="forums"/>
+    <engine name="notify"/>
+    <engine name="notify-email"/>
+    <engine name="channels"/>
+    <engine name="content"/>
+    <engine name="collaboration-statistics"/>
+    <engine name="personalization"/>
+    <engine name="portal"/>
+    <engine name="metadata"/>
+    <engine name="process-design"/>
+    <engine name="process-analytics0"/>
+    <engine name="process-analytics1"/>
+    <engine name="process-analytics2"/>
+    <engine name="process-execution0"/>
+    <engine name="process-execution1"/>
+    <engine name="process-execution2"/>
+  </server>
+</topology>
+
+
+<!--
+  MULTIPLE GATEWAYS IN TWO DIFFERENT MACHINES
+  Please make sure not to use "localhost" when distributing
+  the application across different machines. In this case both 
+  machines will start allocating ports from 5000, but it can be
+  overridden by using a "port" attribute in the "server" element.
+  personalization has gateway 1 and 2 on machine 1 and gateway 3 and 4 on machine 2
+  process-analytics has gateways 1, 2, 3, and 4 on machine 2
+
+<topology port="5000">
+  <server host="@engine.host.1@">
+    <engine name="forums"/>
+    <engine name="notify"/>
+    <engine name="notify-email"/>
+    <engine name="channels"/>
+    <engine name="personalization"/>
+    <engine name="personalization"/>
+    <engine name="portal"/>
+    <engine name="metadata"/>
+  </server>
+  <server host="@engine.host.2@">
+    <engine name="personalization"/>
+    <engine name="personalization"/>
+    <engine name="content"/>
+    <engine name="collaboration-statistics"/>
+    <engine name="process-design"/>
+    <engine name="process-analytics0"/>
+    <engine name="process-analytics1"/>
+    <engine name="process-analytics2"/>
+    <engine name="process-analytics0"/>
+    <engine name="process-analytics1"/>
+    <engine name="process-analytics2"/>
+    <engine name="process-analytics0"/>
+    <engine name="process-analytics1"/>
+    <engine name="process-analytics2"/>
+    <engine name="process-analytics0"/>
+    <engine name="process-analytics1"/>
+    <engine name="process-analytics2"/>
+    <engine name="process-execution0"/>
+    <engine name="process-execution1"/>
+    <engine name="process-execution2"/>
+  </server>
+</topology>
+-->

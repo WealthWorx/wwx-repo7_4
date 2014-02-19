@@ -1,0 +1,110 @@
+#environmentHeader {
+  padding-top: 5px;
+  padding-left: 7px;
+  height:40px;
+  /*overflow:hidden;*/ /* Setting overflow to hidden here makes the 
+                          Application menu show up under the content 
+                          (Firefox bug). See #36902*/
+}
+
+#environmentHeader .a1 {
+  float:left;
+  width:40%;
+  padding-top:0.40em;
+}
+
+#environmentHeader .a2 {
+  float:left;
+  width:59%;
+}
+
+#environmentHeader .b1 {
+  float:left;
+  width:17px;
+  padding: 3px 0 0 3px;
+}
+
+#environmentHeader .b2 {
+  float:left;
+  width:auto;
+  max-width:79%;
+  height:auto;
+  overflow:hidden;
+  padding: 0 4px;
+}
+#environmentHeader .appName {
+  padding-right: 20px;
+}
+a#applicationNameLink{
+  overflow: hidden;
+  white-space: nowrap;
+  display: block;
+}
+* html #environmentHeader .b2 {
+  /* ie6 doesn't support max-width */
+  width:78%;
+}
+  
+#environmentHeader .b3 {
+  float:left;
+  width:25px;
+  padding: 4px 0 0 3px;
+}
+
+#environmentHeader .c1 {
+  float:left;
+  width:70%;
+  margin-top:0.8em;
+}
+
+#environmentHeader .c2 { /* Change this width to something like 25% if substituting in a wider logo. Note that the c1 width and the c2 width must add up to 99% */
+  float:left;
+  width:29%;
+}
+
+#environmentHeader .c2 img {
+  float:right;
+  margin-top: 1px;
+  margin-right: -7px; /* compensates for inability to line up the logo with the right edge of the window because its containing div widths can't add up to 100% */
+}
+
+#environmentHeader .d1 {
+  float:right;
+  margin-right:1%;
+  width:auto;
+}
+
+#environmentHeader .d1 a {
+  display:block;
+  float:left;
+  margin:0 5px;
+  white-space:nowrap;
+  /* Padding needed to accommodate the icon used in sprites */
+  padding-left: 17px;  
+}
+
+div#inlineConfirmMessage{
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  width: 400px;
+  line-height: 16px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  margin-left: -200px;
+  padding: 3px 25px 3px 25px;
+  z-index: 100;
+  text-align: center;
+  font-size: 11px;
+  display: none;
+}
+
+div.minimizedConfirmMessage{
+  height: 16px;
+}
+
+div#inlineConfirmMessage:hover{
+  height: auto;
+}
+
+#environmentHeader .d1 a.headerTempoIcon { margin-right:10px; }

@@ -1,0 +1,93 @@
+#environmentNavigation {
+  background:white;
+  font-weight:bold;
+}
+/* Blue alternate skin
+#environmentNavigation {
+  background:#14446B;
+}
+*/
+#environmentNavigation.yui-navset .yui-nav {
+  border:0;
+}
+
+#environmentNavigation.yui-navset .yui-nav a {
+  background:#304867 url(../../../../portal/img/skins/default/enduser_unselected.gif) repeat-x;
+  color:white;
+  border-left:1px solid #304867;
+  border-right:1px solid #304867;
+}
+/* Blue alternate skin
+#environmentNavigation.yui-navset .yui-nav a {
+  background:#5EB054 url(../../../../portal/img/skins/blue/enduser_unselected.gif) repeat-x;
+  border-left:1px solid #5EB054;
+  border-right:1px solid #5EB054;
+}
+*/
+#environmentNavigation.yui-navset .yui-nav .selected{
+  border-bottom:1px solid white;
+}
+#environmentNavigation.yui-navset .yui-nav .selected a {
+  background:white url(../../../../portal/img/skins/default/enduser_selected.gif) repeat-x;
+  color:black;
+  border-left:1px solid #bbb;
+  border-right:1px solid #bbb;
+}
+/* Blue alternate skin
+#environmentNavigation.yui-navset .yui-nav .selected a {
+  background:white url(../../../../portal/img/skins/blue/enduser_selected.png) repeat-x;  
+  border-left:1px solid white;
+  border-right:1px solid white;
+}
+*/
+#environmentNavigation.yui-navset .yui-nav li a em {
+  border-top:1px solid #304867;
+}
+/* Blue alternate skin
+#environmentNavigation.yui-navset .yui-nav li a em {
+  border-top:1px solid #5EB054;
+}
+*/
+#environmentNavigation.yui-navset .yui-nav .selected a em {
+  border-top:1px solid #bbb;
+}
+/* Blue alternate skin
+#environmentNavigation.yui-navset .yui-nav .selected a em {
+  border-top:1px solid white;
+}
+*/
+#environmentNavigation.yui-navset .yui-nav a:hover {
+  background-color:#304867;
+  background-image: none;
+  border-left:1px solid #304867;
+  border-right:1px solid #304867;
+}
+/* Blue alternate skin
+#environmentNavigation.yui-navset .yui-nav a:hover {
+  background-color:#3E9234;
+  background-image: none;
+  border-left:1px solid #3E9234;
+  border-right:1px solid #3E9234;
+}
+
+#environmentNavigation.yui-navset .yui-nav li a:hover em {
+  border-top:1px solid #3E9234;
+}
+
+#environmentNavigation.yui-navset .yui-nav li.selected a:hover em {
+  border-top:1px solid white;
+}
+*/
+#environmentNavigation.yui-navset .yui-nav .selected a:hover {
+  background:white url(../../../../portal/img/skins/default/enduser_selected.gif) repeat-x;
+  border-left:1px solid #bbb;
+  border-right:1px solid #bbb;
+  color:black;
+}
+/* Blue alternate skin
+#environmentNavigation.yui-navset .yui-nav .selected a:hover {
+  background:white url(../../../../portal/img/skins/blue/enduser_selected.png) repeat-x;
+  border-left:1px solid white;
+  border-right:1px solid white;
+}
+*/

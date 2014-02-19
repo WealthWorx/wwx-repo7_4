@@ -1,0 +1,31 @@
+.login_logo{
+  margin: 20px 18px 20px 50px;
+}
+
+body{
+  background: url("../../../../portal/img/login_linen_wallpaper.png") repeat scroll center center #D0DFE7;
+}
+
+.login_box_inner{
+  border: 4px solid #304867;  
+}
+
+.btn.primary, input.iBlueButton{
+  background-color: #304867;
+  background-repeat: repeat-x;
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#4c71a2), to(#304867));
+  background-image: -moz-linear-gradient(top, #4c71a2, #304867);
+  background-image: -ms-linear-gradient(top, #4c71a2, #304867);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #4c71a2), color-stop(100%, #304867));
+  background-image: -webkit-linear-gradient(top, #4c71a2, #304867);
+  background-image: -o-linear-gradient(top, #4c71a2, #304867);
+  background-image: linear-gradient(top, #4c71a2, #304867);
+  border-color: #304867 #304867 #1b2839;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  text-shadow: #244c0b 0px 0px 1px;
+  color: #ffffff;
+}
+
+#copyright{
+  background-color: #304867;
+}

@@ -1,0 +1,19 @@
+#logo{
+  margin: 20px 0 2px 10px;
+}
+#bodyContainer{
+  background: white url(../../../../portal/img/login_bg_designer.jpg) no-repeat;
+  background-position: center center;
+}
+#envname{
+  font-family: Arial,Sans-Serif;
+  font-size: 12px;
+  font-weight: bold;
+  color: #00456A;
+  position: relative;
+  top: 20px;
+  left: 110px;
+}
+form{
+  margin: 14px 0 0 0;
+}

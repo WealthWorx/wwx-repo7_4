@@ -1,0 +1,52 @@
+#environmentHeader {
+  background:#D7E6E9;
+}
+
+.topNavigationControls a {
+  color: #154A72;
+}
+.topNavigationControls a:hover {
+  color: #1c96c0;
+}
+
+.topNavigationControls .emphasis {
+  font-weight:bold;
+}
+
+#environmentHeader .topNavigationControls a.headerTempoIcon { 
+  font-weight: bold; 
+}
+
+#environmentHeader .topNavigationControls a.sprite{
+  background: url(../../../../portal/img/skins/blue/links_sprite.gif) no-repeat top left;
+}
+
+#environmentHeader .topNavigationControls a.sprite.alerts { background-position: 0 -92px; } 
+#environmentHeader .topNavigationControls a.sprite.help { background-position: 0 -300px; } 
+#environmentHeader .topNavigationControls a.sprite.home { background-position: 0 -508px; } 
+#environmentHeader .topNavigationControls a.sprite.inbox { background-position: 0 -716px; } 
+#environmentHeader .topNavigationControls a.sprite.logout { background-position: 0 -924px; } 
+#environmentHeader .topNavigationControls a.sprite.preferences { background-position: 0 -1132px; }
+
+#environmentHeader .topNavigationControls a.sprite.alerts:hover { background-position: 0 -144px; } 
+#environmentHeader .topNavigationControls a.sprite.help:hover { background-position: 0 -352px; } 
+#environmentHeader .topNavigationControls a.sprite.home:hover { background-position: 0 -560px; } 
+#environmentHeader .topNavigationControls a.sprite.inbox:hover { background-position: 0 -768px; } 
+#environmentHeader .topNavigationControls a.sprite.logout:hover { background-position: 0 -976px; } 
+#environmentHeader .topNavigationControls a.sprite.preferences:hover { background-position: 0 -1184px; }
+
+a.launchlink img{
+  border: 0;
+  vertical-align: bottom !important;
+}
+
+span.launchtext{
+  display: inline-block;
+  background: url(../../../../framework/img/launch_portal_2.gif) repeat-x top;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 0 3px 0 4px;
+  height: 19px;
+}
