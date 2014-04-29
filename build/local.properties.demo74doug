@@ -94,7 +94,7 @@ conf.suite.SCHEME=http
 # This is the URL that end users will be accessing the system from. It will be used for 
 # all links back into the system, for example in emails.
 # If using a web server like Apache HTTP, port :80 is implicit, so no need to specify it
-conf.suite.SERVER_AND_PORT=jbovatsek-pc:8080
+conf.suite.SERVER_AND_PORT=Doug-HP:8080
 
 #This setting allows for a dropdown in the top right corner of the Tempo interface 
 #with links to published applications within the /apps interface.
@@ -394,9 +394,9 @@ conf.data.primary.pool-name=WWXPrimarySQLServer
 conf.data.primary.class=com.microsoft.sqlserver.jdbc.SQLServerXADataSource
 conf.data.primary.security.domain=ds-name-security-primary
 conf.data.primary.security.username=sa
-conf.data.primary.security.passwordhash=5dfc52b51bd35553191807e488d93efe
+conf.data.primary.security.passwordhash=69b9f023c94ef313207a6df87216de44
 conf.data.primary.driver=com.microsoft.sqlserver.jdbc
-conf.data.primary.host=JBOVATSEK-PC
+conf.data.primary.host=Doug-HP
 conf.data.primary.port=1433
 conf.data.primary.database=WWXDemo7_4
 
@@ -405,9 +405,9 @@ conf.data.secondary.1.pool-name=ODR_SQLServer
 conf.data.secondary.1.class=com.microsoft.sqlserver.jdbc.SQLServerXADataSource
 conf.data.secondary.1.security.domain=ds-name-security-odr
 conf.data.secondary.1.security.username=sa
-conf.data.secondary.1.security.passwordhash=5dfc52b51bd35553191807e488d93efe
+conf.data.secondary.1.security.passwordhash=69b9f023c94ef313207a6df87216de44
 conf.data.secondary.1.driver=com.microsoft.sqlserver.jdbc
-conf.data.secondary.1.host=JBOVATSEK-PC
+conf.data.secondary.1.host=Doug-HP
 conf.data.secondary.1.port=1433
 conf.data.secondary.1.database=ODRDev
 conf.data.secondary.2.jndiname=jdbc/WWXRepo_SQLServer
@@ -415,9 +415,9 @@ conf.data.secondary.2.pool-name=ODR_SQLServer
 conf.data.secondary.2.class=com.microsoft.sqlserver.jdbc.SQLServerXADataSource
 conf.data.secondary.2.security.domain=ds-name-security-repo
 conf.data.secondary.2.security.username=sa
-conf.data.secondary.2.security.passwordhash=5dfc52b51bd35553191807e488d93efe
+conf.data.secondary.2.security.passwordhash=69b9f023c94ef313207a6df87216de44
 conf.data.secondary.2.driver=com.microsoft.sqlserver.jdbc
-conf.data.secondary.2.host=JBOVATSEK-PC
+conf.data.secondary.2.host=Doug-HP
 conf.data.secondary.2.port=1433
 conf.data.secondary.2.database=WWXRepo
 
