@@ -20,6 +20,7 @@
     <xa-pool>
       <min-pool-size>5</min-pool-size>
       <max-pool-size>100</max-pool-size>
+	  <use-strict-min>true</use-strict-min>
     </xa-pool>
     <timeout>
       <blocking-timeout-millis>5000</blocking-timeout-millis>
@@ -46,6 +47,7 @@
     <xa-pool>
       <min-pool-size>5</min-pool-size>
       <max-pool-size>100</max-pool-size>
+	  <use-strict-min>true</use-strict-min>
     </xa-pool>
     <timeout>
       <blocking-timeout-millis>5000</blocking-timeout-millis>
@@ -72,6 +74,7 @@
     <xa-pool>
       <min-pool-size>5</min-pool-size>
       <max-pool-size>100</max-pool-size>
+	  <use-strict-min>true</use-strict-min>
     </xa-pool>
     <timeout>
       <blocking-timeout-millis>5000</blocking-timeout-millis>
